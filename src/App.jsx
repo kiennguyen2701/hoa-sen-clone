@@ -34,6 +34,7 @@ export default function App() {
           <Route path="/cam-nang" element={<GuidesPage />} />
           <Route path="/danh-gia" element={<ReviewsPage />} />
           <Route path="/lien-he" element={<ContactPage />} />
+          <Route path="/tour/:slug" element={<TourDetailPage />} />
         </Routes>
 
         <SiteFooter />
@@ -41,3 +42,4 @@ export default function App() {
     </BrowserRouter>
   );
 }
+import TourDetailPage from './pages/TourDetailPage';
