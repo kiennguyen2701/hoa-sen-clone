@@ -1,5 +1,5 @@
 import PageContainer from '../components/PageContainer';
-import { guides } from '../data/siteData';
+import { guides } from '../data/siteDataTemp.js';
 
 export default function GuidesPage() {
   return (

@@ -1,6 +1,6 @@
 import PageContainer from '../components/PageContainer';
 import TourCard from '../components/TourCard';
-import { domesticTours } from '../data/siteData';
+import { domesticTours } from '../data/siteDataTemp.js';
 
 export default function DomesticToursPage() {
   return (

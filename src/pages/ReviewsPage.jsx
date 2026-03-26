@@ -1,5 +1,5 @@
 import PageContainer from '../components/PageContainer';
-import { reviews } from '../data/siteData';
+import { reviews } from '../data/siteDataTemp.js';
 
 export default function ReviewsPage() {
   return (

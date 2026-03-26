@@ -1,6 +1,6 @@
 import TourCard from '../components/TourCard';
 import PageContainer from '../components/PageContainer';
-import { featuredTours } from '../data/siteData';
+import { featuredTours } from '../data/siteDataTemp.js';
 
 export default function HomePage() {
   return (

@@ -1,5 +1,5 @@
 import PageContainer from '../components/PageContainer';
-import { services } from '../data/siteData';
+import { services } from '../data/siteDataTemp.js';
 
 export default function ServicesPage() {
   return (

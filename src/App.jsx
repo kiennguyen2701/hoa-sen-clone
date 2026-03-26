@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import SiteHeader from './components/SiteHeader';
 import SiteFooter from './components/SiteFooter';
-import HomePage from './pages/HomePage';
+import HomePage from './pages/Homepage';
 import AboutPage from './pages/AboutPage';
 import InternationalToursPage from './pages/InternationalToursPage';
 import DomesticToursPage from './pages/DomesticToursPage';
