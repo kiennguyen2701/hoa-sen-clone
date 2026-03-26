@@ -1,7 +1,7 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import SiteHeader from './components/SiteHeader';
 import SiteFooter from './components/SiteFooter';
-import HomePage from './pages/Homepage';
+import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
 import InternationalToursPage from './pages/InternationalToursPage';
 import DomesticToursPage from './pages/DomesticToursPage';
@@ -9,6 +9,7 @@ import ServicesPage from './pages/ServicesPage';
 import GuidesPage from './pages/GuidesPage';
 import ReviewsPage from './pages/ReviewsPage';
 import ContactPage from './pages/ContactPage';
+import TourDetailPage from './pages/TourDetailPage';
 
 export default function App() {
   return (
@@ -42,4 +43,3 @@ export default function App() {
     </BrowserRouter>
   );
 }
-import TourDetailPage from './pages/TourDetailPage';
