@@ -1,12 +1,12 @@
 const topMenu = [
-  'Trang chủ',
-  'Giới thiệu',
-  'DU LỊCH QUỐC TẾ',
-  'DU LỊCH TRONG NƯỚC',
-  'DỊCH VỤ - VISA',
-  'Cẩm nang',
-  'Đánh giá',
-  'Liên hệ',
+  { label: 'TRANG CHỦ', href: '#trang-chu' },
+  { label: 'GIỚI THIỆU', href: '#gioi-thieu' },
+  { label: 'DU LỊCH QUỐC TẾ', href: '#du-lich-quoc-te' },
+  { label: 'DU LỊCH TRONG NƯỚC', href: '#diem-den-yeu-thich' },
+  { label: 'DỊCH VỤ - VISA', href: '#dich-vu-visa' },
+  { label: 'CẨM NANG', href: '#cam-nang' },
+  { label: 'ĐÁNH GIÁ', href: '#danh-gia' },
+  { label: 'LIÊN HỆ', href: '#lien-he' },
 ];
 
 const featuredTours = [
@@ -131,49 +131,31 @@ export default function HoaSenTravelClone() {
         <button className="flex h-12 w-12 items-center justify-center rounded-full bg-[#d0892d] text-lg text-white shadow-lg">☎</button>
       </div>
 
-      <header className="relative z-40 border-b border-[#e9dbc5] bg-white">
-        <div className="mx-auto flex max-w-[1180px] items-center justify-between gap-4 px-4 py-2 text-xs font-medium text-[#7a552f]">
-          <div className="flex items-center gap-2">
-            <span className="font-bold uppercase">DU LỊCH HOA SEN</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <span>Hotline tư vấn</span>
-            <span className="font-bold text-[#ad6b0f]">0904 999 571</span>
-          </div>
-        </div>
-
-        <div className="mx-auto flex max-w-[1180px] items-center justify-between gap-6 px-4 py-4">
-          <div className="flex items-center gap-4">
-            <div className="flex h-16 w-16 items-center justify-center rounded-full border-2 border-[#d8b169] bg-[#fff7e8] text-xl font-extrabold text-[#a56b15]">
-              HS
-            </div>
-            <div>
-              <div className="text-xl font-extrabold uppercase tracking-[0.04em] text-[#7c511f]">Công Ty Du Lịch Hành Hương Quốc Tế Hoa Sen</div>
-            </div>
-          </div>
-        </div>
-
-        <div className="border-t border-[#eadfce] bg-[#f8f1e2]">
-          <div className="mx-auto flex max-w-[1180px] items-center gap-1 overflow-x-auto px-4 py-0">
-            {topMenu.map((item, index) => (
-              <a
-                key={item}
-                href="#"
-                className={`whitespace-nowrap border-r border-[#eadfce] px-4 py-4 text-sm font-semibold uppercase tracking-[0.04em] ${
-                  index === 0 ? 'bg-[#8c6326] text-white' : 'text-[#6b4a23] hover:bg-[#eddcc0]'
-                }`}
-              >
-                {item}
-              </a>
-            ))}
-          </div>
-        </div>
-      </header>
+      <nav className="border-y border-[#eadfce] bg-[#f3e7d2]">
+ <div className="border-t border-[#eadfce] bg-[#f8f1e2]">
+  <div className="mx-auto flex max-w-[1180px] items-center gap-1 overflow-x-auto px-4 py-0">
+    {topMenu.map((item, index) => (
+      <a
+        key={item.label}
+        href={item.href}
+        className={`whitespace-nowrap border-r border-[#eadfce] px-4 py-4 text-sm font-semibold uppercase tracking-[0.04em] ${
+          index === 0 ? 'bg-[#8c6326] text-white' : 'text-[#6b4a23] hover:bg-[#eddcc0]'
+        }`}
+      >
+        {item.label}
+      </a>
+    ))}
+  </div>
+</div>
+</nav>
 
       <section className="border-b border-[#eadfce] bg-[linear-gradient(180deg,#fdf8ee,#f5e7ce)]">
         <div className="mx-auto grid max-w-[1180px] gap-8 px-4 py-10 lg:grid-cols-[1.5fr_1fr]">
           <div className="overflow-hidden rounded-md border border-[#ebd8ba] bg-white shadow-sm">
-            <div className="flex h-[360px] items-center justify-center bg-[linear-gradient(120deg,#ead1a0,#c3924f,#6a411a)] px-8 text-center text-white">
+            <div
+  id="trang-chu"
+  className="flex h-[360px] items-center justify-center bg-[linear-gradient(120deg,#ead1a0,#c3924f,#6a411a)] px-8 text-center text-white"
+>
               <div>
                 <div className="text-sm font-semibold uppercase tracking-[0.35em]">DU LỊCH HOA SEN 2026</div>
                 <h1 className="mt-4 text-4xl font-black leading-tight lg:text-5xl">Hoa Sen Xứ Phật</h1>
@@ -202,7 +184,7 @@ export default function HoaSenTravelClone() {
       </section>
 
       <main>
-        <section className="mx-auto max-w-[1180px] px-4 py-10">
+        <section id="du-lich-quoc-te" className="mx-auto max-w-[1180px] px-4 py-10">
           <div className="mb-6 flex items-center justify-between">
             <h2 className="text-2xl font-extrabold uppercase text-[#7c511f]">Tour nổi bật</h2>
           </div>
@@ -213,7 +195,7 @@ export default function HoaSenTravelClone() {
           </div>
         </section>
 
-        <section className="border-y border-[#eadfce] bg-white">
+        <section id="gioi-thieu" className="border-b border-[#eadfce] bg-[linear-gradient(180deg,#fdf8ee,#f5e7ce)]">
           <div className="mx-auto grid max-w-[1180px] gap-8 px-4 py-12 lg:grid-cols-[1.2fr_0.8fr]">
             <div>
               <div className="mb-3 text-sm font-bold uppercase tracking-[0.22em] text-[#a26d1a]">Tầm nhìn</div>
@@ -230,7 +212,7 @@ export default function HoaSenTravelClone() {
                 </p>
               </div>
             </div>
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
+            <div id="dich-vu-visa" className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
               {['DU LỊCH QUỐC TẾ', 'DU LỊCH TRONG NƯỚC', 'DỊCH VỤ - VISA', 'TOUR INBOUND'].map((item) => (
                 <div key={item} className="rounded-md border border-[#eadfce] bg-[#faf4ea] p-5 text-center text-sm font-bold uppercase tracking-[0.08em] text-[#7a552f] shadow-sm">
                   {item}
@@ -240,7 +222,7 @@ export default function HoaSenTravelClone() {
           </div>
         </section>
 
-        <section className="mx-auto max-w-[1180px] px-4 py-10">
+        <section id="diem-den-yeu-thich" className="mx-auto max-w-[1180px] px-4 py-10">
           <h2 className="mb-6 text-2xl font-extrabold uppercase text-[#7c511f]">Điểm đến yêu thích</h2>
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             {destinations.map((item) => (
@@ -255,7 +237,7 @@ export default function HoaSenTravelClone() {
           </div>
         </section>
 
-        <section className="border-y border-[#eadfce] bg-white">
+        <section id="cam-nang" className="border-y border-[#eadfce] bg-white">
           <div className="mx-auto max-w-[1180px] px-4 py-10">
             <div className="mb-6 flex items-center justify-between gap-4">
               <h2 className="text-2xl font-extrabold uppercase text-[#7c511f]">Cẩm nang du lịch</h2>
@@ -275,7 +257,7 @@ export default function HoaSenTravelClone() {
           </div>
         </section>
 
-        <section className="mx-auto max-w-[1180px] px-4 py-10">
+        <section id="danh-gia" className="mx-auto max-w-[1180px] px-4 py-10">
           <h2 className="text-2xl font-extrabold uppercase text-[#7c511f]">Review</h2>
           <p className="mt-3 max-w-4xl text-sm leading-7 text-[#63523d]">
             Du Lịch Hoa Sen luôn hướng đến sự uy tín và chân thật trong từng Tour đến từng khách hàng. Để đạt đến sự trọn vẹn ngày nay, là thành quả của những quý khách luôn yêu quý và ủng hộ Hành Hương Hoa Sen...
@@ -318,9 +300,9 @@ export default function HoaSenTravelClone() {
           </div>
         </section>
 
-        <section className="mx-auto max-w-[1180px] px-4 py-10">
-          <div className="rounded-md border border-[#eadfce] bg-white p-6 shadow-sm">
-            <div className="mb-4 text-xl font-extrabold uppercase text-[#7c511f]">Để lại thông tin, chúng tôi sẽ gọi lại cho bạn!</div>
+        <section id="lien-he" className="mx-auto max-w-[1180px] px-4 py-10">
+  <div className="rounded-md border border-[#eadfce] bg-white p-6 shadow-sm">
+    <div className="mb-4 text-xl font-extrabold uppercase text-[#7c511f]">Để lại thông tin, chúng tôi sẽ gọi lại cho bạn!</div>
             <div className="grid gap-4 md:grid-cols-2">
               <input className="rounded-md border border-[#dcc7a6] px-4 py-3 outline-none ring-0 placeholder:text-[#9a8a76]" placeholder="Vui lòng nhập họ tên" />
               <input className="rounded-md border border-[#dcc7a6] px-4 py-3 outline-none ring-0 placeholder:text-[#9a8a76]" placeholder="Vui lòng nhập SĐT" />
