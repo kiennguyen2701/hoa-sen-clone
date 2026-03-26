@@ -25,6 +25,7 @@ export default function TourCard({ title, index }) {
         <h3 className="min-h-[60px] text-sm font-bold leading-5 text-[#3d2a17]">
           {title}
         </h3>
+
         <Link
           to={`/tour/${slug}`}
           className="inline-block rounded-sm border border-[#b78a4d] px-3 py-2 text-xs font-semibold uppercase tracking-[0.08em] text-[#8b5a22] hover:bg-[#8b5a22] hover:text-white"
