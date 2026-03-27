@@ -95,7 +95,7 @@ export default function AdminPage() {
       status: tour.status || 'active',
     };
   }
-<SiteSettingsPanel />
+
   function normalizePayload(raw) {
     return {
       title: raw.title.trim(),
@@ -231,7 +231,7 @@ export default function AdminPage() {
           Đăng xuất
         </button>
       </div>
-
+<SiteSettingsPanel />
       <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
         <div className="rounded-3xl border border-[#eadfce] bg-white p-6 shadow-sm">
           <h2 className="text-2xl font-black text-[#714b1f]">{formTitle}</h2>
