@@ -7,6 +7,7 @@ import {
   deleteTour,
   uploadTourImage,
 } from '../lib/toursApi';
+import SiteSettingsPanel from '../components/admin/SiteSettingsPanel';
 
 const emptyForm = {
   title: '',
@@ -94,7 +95,7 @@ export default function AdminPage() {
       status: tour.status || 'active',
     };
   }
-
+<SiteSettingsPanel />
   function normalizePayload(raw) {
     return {
       title: raw.title.trim(),
