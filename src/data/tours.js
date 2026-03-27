@@ -88,7 +88,7 @@ export const tours = [
     'Lịch trình có thể điều chỉnh tùy tình hình thực tế nhưng vẫn đảm bảo điểm tham quan chính.',
     'Khách vui lòng chuẩn bị giấy tờ cá nhân hợp lệ trước ngày khởi hành.',
   ],
-}
+},
   {
   slug: 'du-lich-singapore-malaysia-2026',
   title: 'DU LỊCH SINGAPORE - MALAYSIA 2026',
