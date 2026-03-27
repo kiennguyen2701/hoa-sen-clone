@@ -37,7 +37,7 @@ export default function App() {
           <Route path="/danh-gia" element={<ReviewsPage />} />
           <Route path="/lien-he" element={<ContactPage />} />
           <Route path="/tour/:slug" element={<TourDetailPage />} />
-          <Route path="/admin" element={<AdminPage />} />
+          <Route path="/admin" element={<div>ADMIN OK</div>} />
         </Routes>
 
         <SiteFooter />
