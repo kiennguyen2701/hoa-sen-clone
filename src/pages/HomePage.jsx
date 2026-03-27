@@ -1,8 +1,18 @@
+import { useEffect, useState } from 'react';
 import TourCard from '../components/TourCard';
 import PageContainer from '../components/PageContainer';
-import { featuredTours } from '../data/siteDataTemp.js';
+import { listTours } from '../lib/toursApi';
 
 export default function HomePage() {
+  const [tours, setTours] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    listTours()
+      .then((res) => setTours(res.slice(0, 8)))
+      .finally(() => setLoading(false));
+  }, []);
+
   return (
     <>
       <section className="border-b border-[#eadfce] bg-[linear-gradient(180deg,#fdf8ee,#f5e7ce)]">
@@ -35,6 +45,7 @@ export default function HomePage() {
                 Tư vấn tour hành hương, du lịch quốc tế, visa và lịch trình riêng theo nhu cầu.
               </div>
             </div>
+
             <div className="rounded-md border border-[#ebd8ba] bg-[#8c6326] p-5 text-white shadow-sm">
               <div className="text-xs font-bold uppercase tracking-[0.25em] text-white/80">
                 Tour chủ lực
@@ -52,13 +63,19 @@ export default function HomePage() {
 
       <PageContainer
         title="Tour nổi bật"
-        subtitle="Trang chủ giữ vai trò landing page tổng hợp. Từ đây khách có thể đi sang từng trang riêng theo menu phía trên."
+        subtitle="Trang chủ đang đọc dữ liệu thật từ database và hiển thị các tour mới nhất."
       >
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {featuredTours.map((tour, index) => (
-            <TourCard key={tour} title={tour} index={index} />
-          ))}
-        </div>
+        {loading ? (
+          <div className="text-[#6b5840]">Đang tải tour...</div>
+        ) : tours.length === 0 ? (
+          <div className="text-[#6b5840]">Chưa có tour nào.</div>
+        ) : (
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+            {tours.map((tour, index) => (
+              <TourCard key={tour.id} tour={tour} index={index} />
+            ))}
+          </div>
+        )}
       </PageContainer>
     </>
   );
