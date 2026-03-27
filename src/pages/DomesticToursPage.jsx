@@ -1,18 +1,40 @@
+import { useEffect, useState } from 'react';
 import PageContainer from '../components/PageContainer';
 import TourCard from '../components/TourCard';
-import { domesticTours } from '../data/siteDataTemp.js';
+import { listTours } from '../lib/toursApi';
 
 export default function DomesticToursPage() {
+  const [tours, setTours] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    listTours()
+      .then((res) =>
+        setTours(
+          res.filter(
+            (x) => (x.category || '').toLowerCase().trim() === 'du lịch trong nước'
+          )
+        )
+      )
+      .finally(() => setLoading(false));
+  }, []);
+
   return (
     <PageContainer
       title="Du lịch trong nước"
-      subtitle="Trang này nên chia theo miền Bắc, miền Trung, miền Nam, biển đảo, hành hương trong nước và tour lễ tết."
+      subtitle="Trang này hiển thị các tour trong nước từ database."
     >
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-        {domesticTours.map((tour, index) => (
-          <TourCard key={tour} title={tour} index={index} />
-        ))}
-      </div>
+      {loading ? (
+        <div className="text-[#6b5840]">Đang tải tour...</div>
+      ) : tours.length === 0 ? (
+        <div className="text-[#6b5840]">Chưa có tour trong nước nào.</div>
+      ) : (
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {tours.map((tour, index) => (
+            <TourCard key={tour.id} tour={tour} index={index} />
+          ))}
+        </div>
+      )}
     </PageContainer>
   );
 }
