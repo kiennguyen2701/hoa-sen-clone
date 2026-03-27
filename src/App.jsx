@@ -11,6 +11,7 @@ import ReviewsPage from './pages/ReviewsPage';
 import ContactPage from './pages/ContactPage';
 import TourDetailPage from './pages/TourDetailPage';
 import AdminPage from './pages/AdminPage';
+import HeroSlider from './components/HeroSlider';
 
 export default function App() {
   return (
@@ -26,6 +27,7 @@ export default function App() {
         </div>
 
         <SiteHeader />
+        <HeroSlider />
 
         <Routes>
           <Route path="/" element={<HomePage />} />
