@@ -240,7 +240,7 @@ export default function TourDetailPage() {
                   <div className="text-xs font-bold uppercase tracking-[0.12em] text-[#9b6a27]">
                     Hotline tư vấn
                   </div>
-                  <div className="mt-2 text-2xl font-black text-[#744815]">0904 999 571</div>
+                  <div className="mt-2 text-2xl font-black text-[#744815]">0965 692 959</div>
                   <div className="mt-1 text-sm text-[#65543e]">Hỗ trợ 08:00 - 17:30 mỗi ngày</div>
                 </div>
               </div>

@@ -14,24 +14,21 @@ export default function HomePage() {
   }, []);
 
   return (
-    <>
-      
-      <PageContainer
-        title="Tour nổi bật"
-        subtitle="Cập nhật hàng ngày"
-      >
-        {loading ? (
-          <div className="text-[#6b5840]">Đang tải tour...</div>
-        ) : tours.length === 0 ? (
-          <div className="text-[#6b5840]">Chưa có tour nào.</div>
-        ) : (
-          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
-            {tours.map((tour, index) => (
-              <TourCard key={tour.id} tour={tour} index={index} />
-            ))}
-          </div>
-        )}
-      </PageContainer>
-    </>
+    <PageContainer
+      title="Tour nổi bật"
+      subtitle="Khám phá những hành trình nổi bật, được nhiều khách hàng quan tâm và lựa chọn."
+    >
+      {loading ? (
+        <div className="text-[#6b5840]">Đang tải tour...</div>
+      ) : tours.length === 0 ? (
+        <div className="text-[#6b5840]">Chưa có tour nào.</div>
+      ) : (
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+          {tours.map((tour, index) => (
+            <TourCard key={tour.id} tour={tour} index={index} />
+          ))}
+        </div>
+      )}
+    </PageContainer>
   );
 }
