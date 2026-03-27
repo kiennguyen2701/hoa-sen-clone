@@ -10,6 +10,7 @@ import GuidesPage from './pages/GuidesPage';
 import ReviewsPage from './pages/ReviewsPage';
 import ContactPage from './pages/ContactPage';
 import TourDetailPage from './pages/TourDetailPage';
+import AdminPage from './pages/AdminPage';
 
 export default function App() {
   return (
@@ -36,6 +37,7 @@ export default function App() {
           <Route path="/danh-gia" element={<ReviewsPage />} />
           <Route path="/lien-he" element={<ContactPage />} />
           <Route path="/tour/:slug" element={<TourDetailPage />} />
+          <Route path="/admin" element={<AdminPage />} />
         </Routes>
 
         <SiteFooter />
