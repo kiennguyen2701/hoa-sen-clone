@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { listTours, getTourBySlug } from '../lib/toursApi';
 import { supabase } from '../lib/supabase';
-import { useState } from 'react';
-import { supabase } from '../lib/supabase';
+
+
 
 export default function TourDetailPage() {
   const { slug } = useParams();
@@ -69,19 +69,19 @@ export default function TourDetailPage() {
       setSending(true);
 
       const { data, error } = await supabase.functions.invoke('booking-email', {
-        body: {
-          tourTitle: tour.title,
-          customerName: bookingForm.customerName.trim(),
-          phone: bookingForm.phone.trim(),
-          departureDate: bookingForm.departureDate || '',
-          guestCount: bookingForm.guestCount || '',
-          note: bookingForm.note.trim(),
-        },
-      });
+  body: {
+    tourTitle: tour.title,
+    customerName: bookingForm.customerName,
+    phone: bookingForm.phone,
+    departureDate: bookingForm.departureDate,
+    guestCount: bookingForm.guestCount,
+    note: bookingForm.note,
+  },
+  });
 
       if (error) throw error;
 
-      alert('Đã gửi yêu cầu đặt tour thành công. Anh sẽ nhận email thông báo.');
+      alert('Đã gửi yêu cầu đặt tour thành công. Bộ phận tiếp nhận sẽ liên hệ cho quý khách trong thời gian sớm nhất.');
       console.log('booking-email response:', data);
 
       setBookingForm({
