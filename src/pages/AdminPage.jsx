@@ -8,6 +8,7 @@ import {
   uploadTourImage,
 } from '../lib/toursApi';
 import SiteSettingsPanel from '../components/admin/SiteSettingsPanel';
+import HeroSliderSettingsPanel from '../components/admin/HeroSliderSettingsPanel';
 
 const emptyForm = {
   title: '',
@@ -232,6 +233,7 @@ export default function AdminPage() {
         </button>
       </div>
 <SiteSettingsPanel />
+<HeroSliderSettingsPanel />
       <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
         <div className="rounded-3xl border border-[#eadfce] bg-white p-6 shadow-sm">
           <h2 className="text-2xl font-black text-[#714b1f]">{formTitle}</h2>

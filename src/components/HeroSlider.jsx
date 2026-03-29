@@ -1,40 +1,11 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
-
-const slides = [
-  {
-    id: 1,
-    image:
-      'https://images.unsplash.com/photo-1548013146-72479768bada?q=80&w=1800&auto=format&fit=crop',
-    badge: 'Hành hương cao cấp',
-    title: 'Hoa Sen Xứ Phật',
-    subtitle: 'Hành trình tâm linh, du lịch cao cấp và trải nghiệm chân thật cho khách hàng Việt Nam.',
-    ctaText: 'Khám phá tour',
-    ctaLink: '/du-lich-quoc-te',
-  },
-  {
-    id: 2,
-    image:
-      'https://images.unsplash.com/photo-1525625293386-3f8f99389edd?q=80&w=1800&auto=format&fit=crop',
-    badge: 'Tour quốc tế nổi bật',
-    title: 'Singapore - Malaysia 2026',
-    subtitle: 'Khám phá hai quốc gia hiện đại với lịch trình tối ưu, dịch vụ chỉn chu và nhiều lựa chọn linh hoạt.',
-    ctaText: 'Xem ngay',
-    ctaLink: '/du-lich-quoc-te',
-  },
-  {
-    id: 3,
-    image:
-      'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1800&auto=format&fit=crop',
-    badge: 'Du lịch trong nước',
-    title: 'Biển đảo và nghỉ dưỡng Việt Nam',
-    subtitle: 'Lựa chọn các hành trình thư giãn, biển đảo, miền Trung, Tây Bắc và nhiều tuyến trong nước hấp dẫn.',
-    ctaText: 'Xem tour trong nước',
-    ctaLink: '/du-lich-trong-nuoc',
-  },
-];
+import { useHeroSliderSettings } from '../hooks/useSiteSettings';
 
 export default function HeroSlider() {
+  const heroSettings = useHeroSliderSettings();
+  const slides = heroSettings.slides || [];
+
   const [current, setCurrent] = useState(0);
   const [keyword, setKeyword] = useState('');
   const [destination, setDestination] = useState('');
@@ -42,35 +13,47 @@ export default function HeroSlider() {
   const [tourType, setTourType] = useState('');
 
   useEffect(() => {
+    if (!slides.length) return;
+
     const timer = setInterval(() => {
       setCurrent((prev) => (prev + 1) % slides.length);
     }, 5000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [slides]);
 
-  const activeSlide = useMemo(() => slides[current], [current]);
+  useEffect(() => {
+    if (current > slides.length - 1) {
+      setCurrent(0);
+    }
+  }, [slides, current]);
+
+  const activeSlide = useMemo(() => slides[current], [current, slides]);
 
   function prevSlide() {
+    if (!slides.length) return;
     setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
   }
 
   function nextSlide() {
+    if (!slides.length) return;
     setCurrent((prev) => (prev + 1) % slides.length);
   }
 
   function handleSearch(e) {
-  e.preventDefault();
+    e.preventDefault();
 
-  const params = new URLSearchParams();
+    const params = new URLSearchParams();
 
-  if (keyword.trim()) params.set('q', keyword.trim());
-  if (destination) params.set('destination', destination);
-  if (month) params.set('month', month);
-  if (tourType) params.set('type', tourType);
+    if (keyword.trim()) params.set('q', keyword.trim());
+    if (destination) params.set('destination', destination);
+    if (month) params.set('month', month);
+    if (tourType) params.set('type', tourType);
 
-  window.location.href = `/tim-kiem${params.toString() ? `?${params.toString()}` : ''}`;
-}
+    window.location.href = `/tim-kiem${params.toString() ? `?${params.toString()}` : ''}`;
+  }
+
+  if (!activeSlide) return null;
 
   return (
     <section className="bg-[#f7f1e6]">
@@ -101,10 +84,10 @@ export default function HeroSlider() {
 
                 <div className="mt-7 flex flex-wrap gap-3">
                   <Link
-                    to={activeSlide.ctaLink}
+                    to={activeSlide.buttonLink || '/du-lich-quoc-te'}
                     className="inline-flex items-center rounded-2xl bg-[#8b5a22] px-6 py-3 text-sm font-bold uppercase tracking-[0.08em] text-white transition hover:bg-[#744815]"
                   >
-                    {activeSlide.ctaText}
+                    {activeSlide.buttonText || 'Xem ngay'}
                   </Link>
 
                   <Link
@@ -135,7 +118,7 @@ export default function HeroSlider() {
           <div className="absolute bottom-5 left-1/2 z-10 flex -translate-x-1/2 items-center gap-3 rounded-full bg-white/80 px-4 py-2 shadow backdrop-blur-sm">
             {slides.map((slide, index) => (
               <button
-                key={slide.id}
+                key={slide.id || index}
                 onClick={() => setCurrent(index)}
                 className={`h-3 rounded-full transition-all ${
                   current === index ? 'w-10 bg-[#8b5a22]' : 'w-3 bg-[#d7c2a0]'
