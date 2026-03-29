@@ -12,6 +12,7 @@ import ReviewsPage from './pages/ReviewsPage';
 import ContactPage from './pages/ContactPage';
 import TourDetailPage from './pages/TourDetailPage';
 import AdminPage from './pages/AdminPage';
+import SearchPage from './pages/SearchPage';
 
 function AppContent() {
   const location = useLocation();
@@ -44,6 +45,7 @@ function AppContent() {
         <Route path="/lien-he" element={<ContactPage />} />
         <Route path="/tour/:slug" element={<TourDetailPage />} />
         <Route path="/admin" element={<AdminPage />} />
+        <Route path="/tim-kiem" element={<SearchPage />} />
       </Routes>
 
       {!isAdmin && <SiteFooter />}
