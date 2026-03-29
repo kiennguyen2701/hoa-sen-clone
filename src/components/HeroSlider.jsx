@@ -60,16 +60,22 @@ export default function HeroSlider() {
   }
 
   function handleSearch(e) {
-    e.preventDefault();
-    const params = new URLSearchParams();
+  e.preventDefault();
 
-    if (keyword.trim()) params.set('q', keyword.trim());
-    if (destination) params.set('destination', destination);
-    if (month) params.set('month', month);
-    if (tourType) params.set('type', tourType);
+  const params = new URLSearchParams();
 
-    window.location.href = `/du-lich-quoc-te${params.toString() ? `?${params.toString()}` : ''}`;
-  }
+  if (keyword.trim()) params.set('q', keyword.trim());
+  if (destination) params.set('destination', destination);
+  if (month) params.set('month', month);
+  if (tourType) params.set('type', tourType);
+
+  const targetPath =
+    tourType === 'trong-nuoc' || destination === 'trong-nuoc'
+      ? '/du-lich-trong-nuoc'
+      : '/du-lich-quoc-te';
+
+  window.location.href = `${targetPath}${params.toString() ? `?${params.toString()}` : ''}`;
+}
 
   return (
     <section className="bg-[#f7f1e6]">
