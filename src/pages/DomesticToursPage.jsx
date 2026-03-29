@@ -1,4 +1,17 @@
-const keyword = (searchParams.get('q') || '').toLowerCase().trim();
+import { useEffect, useMemo, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import PageContainer from '../components/PageContainer';
+import TourCard from '../components/TourCard';
+import { listTours } from '../lib/toursApi';
+
+export default function DomesticToursPage() {
+  const [tours, setTours] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const location = useLocation();
+
+  const searchParams = useMemo(() => new URLSearchParams(location.search), [location.search]);
+
+  const keyword = (searchParams.get('q') || '').toLowerCase().trim();
   const destination = (searchParams.get('destination') || '').toLowerCase().trim();
   const month = (searchParams.get('month') || '').toLowerCase().trim();
   const type = (searchParams.get('type') || '').toLowerCase().trim();
@@ -6,10 +19,10 @@ const keyword = (searchParams.get('q') || '').toLowerCase().trim();
   useEffect(() => {
     listTours()
       .then((res) => {
-        const internationalTours = res.filter((tour) =>
-          (tour.category || '').toLowerCase().includes('quốc tế')
+        const domesticTours = res.filter((tour) =>
+          (tour.category || '').toLowerCase().includes('trong nước')
         );
-        setTours(internationalTours);
+        setTours(domesticTours);
       })
       .finally(() => setLoading(false));
   }, []);
@@ -23,6 +36,9 @@ const keyword = (searchParams.get('q') || '').toLowerCase().trim();
       const shortDescription = (tour.short_description || tour.shortDescription || '').toLowerCase();
       const overview = (tour.overview || '').toLowerCase();
 
+      const normalizedDestination = destination.replaceAll('-', ' ');
+      const normalizedType = type.replaceAll('-', ' ');
+
       const matchKeyword =
         !keyword ||
         title.includes(keyword) ||
@@ -32,17 +48,23 @@ const keyword = (searchParams.get('q') || '').toLowerCase().trim();
 
       const matchDestination =
         !destination ||
-        title.includes(destination.replaceAll('-', ' ')) ||
+        title.includes(normalizedDestination) ||
         slug.includes(destination) ||
-        category.includes(destination.replaceAll('-', ' '));
+        category.includes(normalizedDestination) ||
+        shortDescription.includes(normalizedDestination) ||
+        overview.includes(normalizedDestination);
 
-      const matchMonth = !month || departure.includes(`tháng ${month}`) || departure.includes(month);
+      const matchMonth =
+        !month ||
+        departure.includes(`tháng ${month}`) ||
+        departure.includes(month);
 
       const matchType =
         !type ||
-        category.includes(type.replaceAll('-', ' ')) ||
-        title.includes(type.replaceAll('-', ' ')) ||
-        overview.includes(type.replaceAll('-', ' '));
+        category.includes(normalizedType) ||
+        title.includes(normalizedType) ||
+        shortDescription.includes(normalizedType) ||
+        overview.includes(normalizedType);
 
       return matchKeyword && matchDestination && matchMonth && matchType;
     });
@@ -50,8 +72,8 @@ const keyword = (searchParams.get('q') || '').toLowerCase().trim();
 
   return (
     <PageContainer
-      title="Du lịch quốc tế"
-      subtitle="Trang này hiển thị các tour quốc tế từ database."
+      title="Du lịch trong nước"
+      subtitle="Trang này hiển thị các tour trong nước từ database."
     >
       {(keyword || destination || month || type) && (
         <div className="mb-6 rounded-2xl border border-[#eadfce] bg-white p-4 text-sm text-[#5f4a33] shadow-sm">
@@ -70,7 +92,7 @@ const keyword = (searchParams.get('q') || '').toLowerCase().trim();
           Không tìm thấy tour phù hợp.
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {filteredTours.map((tour, index) => (
             <TourCard key={tour.id} tour={tour} index={index} />
           ))}

@@ -1,4 +1,17 @@
-const keyword = (searchParams.get('q') || '').toLowerCase().trim();
+import { useEffect, useMemo, useState } from 'react';
+import { useLocation } from 'react-router-dom';
+import PageContainer from '../components/PageContainer';
+import TourCard from '../components/TourCard';
+import { listTours } from '../lib/toursApi';
+
+export default function InternationalToursPage() {
+  const [tours, setTours] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const location = useLocation();
+
+  const searchParams = useMemo(() => new URLSearchParams(location.search), [location.search]);
+
+  const keyword = (searchParams.get('q') || '').toLowerCase().trim();
   const destination = (searchParams.get('destination') || '').toLowerCase().trim();
   const month = (searchParams.get('month') || '').toLowerCase().trim();
   const type = (searchParams.get('type') || '').toLowerCase().trim();
@@ -23,6 +36,9 @@ const keyword = (searchParams.get('q') || '').toLowerCase().trim();
       const shortDescription = (tour.short_description || tour.shortDescription || '').toLowerCase();
       const overview = (tour.overview || '').toLowerCase();
 
+      const normalizedDestination = destination.replaceAll('-', ' ');
+      const normalizedType = type.replaceAll('-', ' ');
+
       const matchKeyword =
         !keyword ||
         title.includes(keyword) ||
@@ -32,17 +48,23 @@ const keyword = (searchParams.get('q') || '').toLowerCase().trim();
 
       const matchDestination =
         !destination ||
-        title.includes(destination.replaceAll('-', ' ')) ||
+        title.includes(normalizedDestination) ||
         slug.includes(destination) ||
-        category.includes(destination.replaceAll('-', ' '));
+        category.includes(normalizedDestination) ||
+        shortDescription.includes(normalizedDestination) ||
+        overview.includes(normalizedDestination);
 
-      const matchMonth = !month || departure.includes(`tháng ${month}`) || departure.includes(month);
+      const matchMonth =
+        !month ||
+        departure.includes(`tháng ${month}`) ||
+        departure.includes(month);
 
       const matchType =
         !type ||
-        category.includes(type.replaceAll('-', ' ')) ||
-        title.includes(type.replaceAll('-', ' ')) ||
-        overview.includes(type.replaceAll('-', ' '));
+        category.includes(normalizedType) ||
+        title.includes(normalizedType) ||
+        shortDescription.includes(normalizedType) ||
+        overview.includes(normalizedType);
 
       return matchKeyword && matchDestination && matchMonth && matchType;
     });

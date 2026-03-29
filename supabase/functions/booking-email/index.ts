@@ -42,7 +42,7 @@ Deno.serve(async (req) => {
     }
 
     const { data, error } = await resend.emails.send({
-      from: "Hoa Sen Booking <onboarding@resend.dev>",
+      from: "MVip Travel <onboarding@resend.dev>",
       to: ["kiennguyen2701@gmail.com"],
       subject: `Khách mới đặt tour: ${tourTitle}`,
       html: `
