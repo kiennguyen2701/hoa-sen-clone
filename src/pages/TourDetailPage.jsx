@@ -71,13 +71,13 @@ export default function TourDetailPage() {
       const { data, error } = await supabase.functions.invoke('booking-email', {
   body: {
     tourTitle: tour.title,
-    customerName: bookingForm.customerName,
-    phone: bookingForm.phone,
-    departureDate: bookingForm.departureDate,
-    guestCount: bookingForm.guestCount,
-    note: bookingForm.note,
+    customerName: bookingForm.customerName.trim(),
+    phone: bookingForm.phone.trim(),
+    departureDate: bookingForm.departureDate || '',
+    guestCount: bookingForm.guestCount || '',
+    note: bookingForm.note.trim(),
   },
-  });
+});
 
       if (error) throw error;
 
