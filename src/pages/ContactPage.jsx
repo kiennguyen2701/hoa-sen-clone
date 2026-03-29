@@ -4,29 +4,9 @@ export default function ContactPage() {
   return (
     <PageContainer
       title="Liên hệ"
-      subtitle="Trang này nên có form liên hệ thật, bản đồ Google Maps, hotline, email, giờ làm việc và nút chat Zalo."
+      subtitle="Vui lòng liên hệ với chúng tôi qua Hotline, Email hoặc Văn phòng đại diện của công ty! Xin chân thành cảm ơn."
     >
-      <div className="grid gap-6 lg:grid-cols-[1fr_0.9fr]">
-        <div className="rounded-md border border-[#eadfce] bg-white p-6 shadow-sm">
-          <div className="mb-4 text-xl font-extrabold uppercase text-[#7c511f]">
-            Để lại thông tin, chúng tôi sẽ gọi lại cho bạn!
-          </div>
-          <div className="grid gap-4 md:grid-cols-2">
-            <input className="rounded-md border border-[#dcc7a6] px-4 py-3 outline-none ring-0 placeholder:text-[#9a8a76]" placeholder="Vui lòng nhập họ tên" />
-            <input className="rounded-md border border-[#dcc7a6] px-4 py-3 outline-none ring-0 placeholder:text-[#9a8a76]" placeholder="Vui lòng nhập SĐT" />
-            <select className="rounded-md border border-[#dcc7a6] px-4 py-3 text-[#6b5840] outline-none ring-0 md:col-span-2">
-              <option>Vui lòng chọn dịch vụ</option>
-              <option>Du lịch quốc tế</option>
-              <option>Du lịch trong nước</option>
-              <option>Dịch vụ visa</option>
-              <option>Tour inbound</option>
-            </select>
-            <textarea className="min-h-[120px] rounded-md border border-[#dcc7a6] px-4 py-3 outline-none ring-0 placeholder:text-[#9a8a76] md:col-span-2" placeholder="Vui lòng nhập nội dung" />
-            <button className="rounded-md bg-[#8b5a22] px-5 py-3 text-sm font-bold uppercase tracking-[0.08em] text-white md:col-span-2 md:w-fit">
-              Gửi thông tin
-            </button>
-          </div>
-        </div>
+             
 
         <div className="rounded-md border border-[#eadfce] bg-white p-6 shadow-sm text-sm leading-8 text-[#65543e]">
           <p><strong>Địa chỉ:</strong> Số 1 Ngách 160/6 Bạch Đằng, Phường Hồng Hà, Hà Nội</p>
@@ -34,9 +14,18 @@ export default function ContactPage() {
           <p><strong>Hotline:</strong> 0965 692 959 - 0366 040 959</p>
           <p><strong>Email:</strong> MvipTravel@gmail.com</p>
           <p><strong>Giờ làm việc:</strong> 08:00 - 17:30</p>
-          <div className="mt-4 h-64 rounded-md bg-[linear-gradient(135deg,#f5e5c6,#c89656,#7d5221)]" />
-        </div>
-      </div>
+          <div className="overflow-hidden rounded-2xl shadow-lg">
+  <iframe
+    src="https://www.google.com/maps?q=B%E1%BA%A1ch%20%C4%90%E1%BA%B1ng%2C%20H%E1%BB%93ng%20H%C3%A0%2C%20H%C3%A0%20N%E1%BB%99i&z=16&output=embed"
+    className="h-[320px] w-full border-0"
+    loading="lazy"
+    allowFullScreen
+    referrerPolicy="no-referrer-when-downgrade"
+    title="Google Map MVIP Travel"
+  />
+  </div>
+</div>
+      
     </PageContainer>
   );
 }

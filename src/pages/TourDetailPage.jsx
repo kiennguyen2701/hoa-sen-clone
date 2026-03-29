@@ -140,7 +140,7 @@ export default function TourDetailPage() {
           <span className="font-semibold text-[#8b5a22]">{tour.title}</span>
         </div>
 
-        <div className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr]">
+        <div className="grid gap-8 lg:grid-cols-[2fr_0.8fr]">
           <div className="space-y-6">
             <div className="overflow-hidden rounded-3xl border border-[#eadfce] bg-white shadow-sm">
               <div className="relative">
