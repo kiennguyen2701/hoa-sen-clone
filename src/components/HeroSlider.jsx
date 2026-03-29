@@ -64,28 +64,53 @@ export default function HeroSlider() {
 
   const params = new URLSearchParams();
 
+  const normalizedKeyword = keyword.toLowerCase().trim();
+  const normalizedDestination = destination.toLowerCase().trim();
+  const normalizedType = tourType.toLowerCase().trim();
+
   if (keyword.trim()) params.set('q', keyword.trim());
   if (destination) params.set('destination', destination);
   if (month) params.set('month', month);
   if (tourType) params.set('type', tourType);
 
-  const normalizedKeyword = keyword.toLowerCase().trim();
+  const domesticKeywords = [
+    'đà nẵng',
+    'da nang',
+    'phú quốc',
+    'phu quoc',
+    'nha trang',
+    'hạ long',
+    'ha long',
+    'sapa',
+    'sa pa',
+    'quy nhơn',
+    'quy nhon',
+    'đà lạt',
+    'da lat',
+    'combo',
+    'vinpearl',
+    'sun world',
+    'bà nà',
+    'ba na',
+    'trong nước',
+    'noi dia',
+    'nội địa',
+  ];
 
   const shouldGoDomestic =
-    tourType === 'trong-nuoc' ||
-    destination === 'trong-nuoc' ||
-    normalizedKeyword.includes('đà nẵng') ||
-    normalizedKeyword.includes('da nang') ||
-    normalizedKeyword.includes('phú quốc') ||
-    normalizedKeyword.includes('phu quoc') ||
-    normalizedKeyword.includes('nha trang') ||
-    normalizedKeyword.includes('combo');
+    normalizedType.includes('trong-nuoc') ||
+    normalizedType.includes('trong nước') ||
+    normalizedDestination.includes('trong-nuoc') ||
+    normalizedDestination.includes('trong nước') ||
+    domesticKeywords.some((item) => normalizedKeyword.includes(item));
 
   const targetPath = shouldGoDomestic
     ? '/du-lich-trong-nuoc'
     : '/du-lich-quoc-te';
 
-  window.location.href = `${targetPath}${params.toString() ? `?${params.toString()}` : ''}`;
+  window.location.href = `${targetPath}${
+    params.toString() ? `?${params.toString()}` : ''
+  }`;
 }
 
   return (
