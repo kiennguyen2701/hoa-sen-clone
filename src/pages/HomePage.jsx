@@ -9,7 +9,7 @@ export default function HomePage() {
 
   useEffect(() => {
     listTours()
-      .then((res) => setTours(res.slice(0, 8)))
+      .then((res) => setTours(res.slice(0, 21)))
       .finally(() => setLoading(false));
   }, []);
 
@@ -23,7 +23,7 @@ export default function HomePage() {
       ) : tours.length === 0 ? (
         <div className="text-[#6b5840]">Chưa có tour nào.</div>
       ) : (
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {tours.map((tour, index) => (
             <TourCard key={tour.id} tour={tour} index={index} />
           ))}

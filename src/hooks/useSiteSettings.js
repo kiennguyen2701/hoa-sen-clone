@@ -2,10 +2,10 @@ import { useEffect, useState } from 'react';
 import { getSetting } from '../lib/settingsApi';
 
 const defaultHeader = {
-  companyName: 'CÔNG TY DU LỊCH HÀNH HƯƠNG QUỐC TẾ HOA SEN',
-  logoText: 'HS',
+  companyName: 'CÔNG TY CỔ PHẦN DU LỊCH MVIP',
+  logoText: 'MVIP',
   hotlineLabel: 'Hotline tư vấn',
-  hotlineNumber: '0904 999 571',
+  hotlineNumber: '0965 692 959',
   menuItems: [
     { label: 'TRANG CHỦ', to: '/' },
     { label: 'GIỚI THIỆU', to: '/gioi-thieu' },
@@ -19,11 +19,11 @@ const defaultHeader = {
 };
 
 const defaultFooter = {
-  companyTitle: 'CÔNG TY TNHH DU LỊCH HÀNH HƯƠNG QUỐC TẾ HOA SEN',
-  address: 'Số 101 Nguyễn Văn Lượng, Phường Gò Vấp, TP HCM',
-  phone: '028.6684.5099',
-  hotline: '0904 999 571 - 0839 017 018',
-  email: 'hanhhuonghoasen@gmail.com',
+  companyTitle: 'CÔNG TY CỔ PHẦN DU LỊCH MVIP',
+  address: 'Số 1 Ngách 160/6 Bạch Đằng, Phường Hồng Hà, Hà Nội',
+  phone: '028.9999.9999',
+  hotline: '0965 692 959 - 0366 040 959',
+  email: 'mviptravel@gmail.com',
   tourHot: [
     'DU LỊCH QUỐC TẾ',
     'DU LỊCH TRONG NƯỚC',

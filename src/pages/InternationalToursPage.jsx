@@ -92,7 +92,7 @@ export default function InternationalToursPage() {
           Không tìm thấy tour phù hợp.
         </div>
       ) : (
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {filteredTours.map((tour, index) => (
             <TourCard key={tour.id} tour={tour} index={index} />
           ))}
