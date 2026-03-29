@@ -29,10 +29,10 @@ export default function ContactPage() {
         </div>
 
         <div className="rounded-md border border-[#eadfce] bg-white p-6 shadow-sm text-sm leading-8 text-[#65543e]">
-          <p><strong>Địa chỉ:</strong> Số 101 Nguyễn Văn Lượng, Phường Gò Vấp, TP HCM</p>
-          <p><strong>Điện thoại:</strong> 028.6684.5099</p>
-          <p><strong>Hotline:</strong> 0904 999 571 - 0839 017 018</p>
-          <p><strong>Email:</strong> hanhhuonghoasen@gmail.com</p>
+          <p><strong>Địa chỉ:</strong> Số 1 Ngách 160/6 Bạch Đằng, Phường Hồng Hà, Hà Nội</p>
+          <p><strong>Điện thoại:</strong> 0965 692 959</p>
+          <p><strong>Hotline:</strong> 0965 692 959 - 0366 040 959</p>
+          <p><strong>Email:</strong> MvipTravel@gmail.com</p>
           <p><strong>Giờ làm việc:</strong> 08:00 - 17:30</p>
           <div className="mt-4 h-64 rounded-md bg-[linear-gradient(135deg,#f5e5c6,#c89656,#7d5221)]" />
         </div>
