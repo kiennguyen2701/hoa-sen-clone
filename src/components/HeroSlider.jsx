@@ -69,10 +69,21 @@ export default function HeroSlider() {
   if (month) params.set('month', month);
   if (tourType) params.set('type', tourType);
 
-  const targetPath =
-    tourType === 'trong-nuoc' || destination === 'trong-nuoc'
-      ? '/du-lich-trong-nuoc'
-      : '/du-lich-quoc-te';
+  const normalizedKeyword = keyword.toLowerCase().trim();
+
+  const shouldGoDomestic =
+    tourType === 'trong-nuoc' ||
+    destination === 'trong-nuoc' ||
+    normalizedKeyword.includes('đà nẵng') ||
+    normalizedKeyword.includes('da nang') ||
+    normalizedKeyword.includes('phú quốc') ||
+    normalizedKeyword.includes('phu quoc') ||
+    normalizedKeyword.includes('nha trang') ||
+    normalizedKeyword.includes('combo');
+
+  const targetPath = shouldGoDomestic
+    ? '/du-lich-trong-nuoc'
+    : '/du-lich-quoc-te';
 
   window.location.href = `${targetPath}${params.toString() ? `?${params.toString()}` : ''}`;
 }

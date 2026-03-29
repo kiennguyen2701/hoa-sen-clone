@@ -17,15 +17,30 @@ export default function DomesticToursPage() {
   const type = (searchParams.get('type') || '').toLowerCase().trim();
 
   useEffect(() => {
-    listTours()
-      .then((res) => {
-        const domesticTours = res.filter((tour) =>
-          (tour.category || '').toLowerCase().includes('trong nước')
+  listTours()
+    .then((res) => {
+      const domesticTours = res.filter((tour) => {
+        const category = (tour.category || '').toLowerCase().trim();
+        const title = (tour.title || '').toLowerCase().trim();
+        const slug = (tour.slug || '').toLowerCase().trim();
+
+        return (
+          category.includes('trong nước') ||
+          category.includes('noi dia') ||
+          category.includes('nội địa') ||
+          title.includes('đà nẵng') ||
+          title.includes('phú quốc') ||
+          title.includes('nha trang') ||
+          slug.includes('combo') ||
+          slug.includes('da-nang') ||
+          slug.includes('phu-quoc')
         );
-        setTours(domesticTours);
-      })
-      .finally(() => setLoading(false));
-  }, []);
+      });
+
+      setTours(domesticTours);
+    })
+    .finally(() => setLoading(false));
+}, []);
 
   const filteredTours = useMemo(() => {
     return tours.filter((tour) => {
