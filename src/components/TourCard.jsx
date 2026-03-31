@@ -77,4 +77,4 @@ export default function TourCard({ tour, index }) {
       </div>
     </div>
   );
-}
+} 
