@@ -3,7 +3,52 @@ import { useParams, Link } from 'react-router-dom';
 import { listTours, getTourBySlug } from '../lib/toursApi';
 import { supabase } from '../lib/supabase';
 
+function normalizeDepartureOptions(departureText) {
+  if (!departureText) return [];
 
+  const text = String(departureText).trim();
+  const afterColon = text.includes(':') ? text.split(':').slice(1).join(':').trim() : text;
+
+  const rawLines = afterColon
+    .split('\n')
+    .map((line) => line.trim())
+    .filter(Boolean);
+
+  const results = [];
+
+  rawLines.forEach((line) => {
+    if (line.includes(',')) {
+      const parts = line.split(',').map((item) => item.trim()).filter(Boolean);
+      const lastPart = parts[parts.length - 1];
+
+      const fullDatePattern = /^\d{1,2}\/\d{1,2}\/\d{4}$/;
+
+      if (fullDatePattern.test(lastPart)) {
+        const [, month, year] = lastPart.split('/');
+
+        parts.forEach((part) => {
+          if (/^\d{1,2}$/.test(part)) {
+            results.push(`${part}/${month}/${year}`);
+          } else if (fullDatePattern.test(part)) {
+            results.push(part);
+          } else if (/^\d{1,2}\/\d{1,2}$/.test(part)) {
+            results.push(`${part}/${year}`);
+          } else {
+            results.push(part);
+          }
+        });
+      } else {
+        parts.forEach((part) => results.push(part));
+      }
+
+      return;
+    }
+
+    results.push(line);
+  });
+
+  return [...new Set(results)];
+}
 
 export default function TourDetailPage() {
   const { slug } = useParams();
@@ -22,6 +67,7 @@ export default function TourDetailPage() {
     guestCount: '',
     note: '',
   });
+const departureOptions = normalizeDepartureOptions(tour?.departure);
 
   useEffect(() => {
     async function load() {
@@ -323,17 +369,23 @@ export default function TourDetailPage() {
                   />
 
                   <select
-                    value={bookingForm.departureDate}
-                    onChange={(e) =>
-                      setBookingForm({ ...bookingForm, departureDate: e.target.value })
-                    }
-                    className="rounded-2xl border border-[#dcc7a6] px-4 py-3 text-[#6b5840] outline-none"
-                  >
-                    <option value="">Chọn ngày khởi hành</option>
-                    <option value="Đợt 1">Đợt 1</option>
-                    <option value="Đợt 2">Đợt 2</option>
-                    <option value="Đợt 3">Đợt 3</option>
-                  </select>
+  value={bookingForm.departureDate}
+  onChange={(e) =>
+    setBookingForm((prev) => ({
+      ...prev,
+      departureDate: e.target.value,
+    }))
+  }
+  className="w-full rounded-2xl border border-[#dcc7a6] px-4 py-3"
+>
+  <option value="">Chọn ngày khởi hành</option>
+
+  {departureOptions.map((date, index) => (
+    <option key={index} value={date}>
+      {date}
+    </option>
+  ))}
+</select>
 
                   <select
                     value={bookingForm.guestCount}
