@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { listTours, getTourBySlug } from '../lib/toursApi';
 import { supabase } from '../lib/supabase';
@@ -54,7 +54,7 @@ export default function TourDetailPage() {
   const { slug } = useParams();
 
   const [activeTab, setActiveTab] = useState('tong-quan');
-  const [mainImage, setMainImage] = useState(null);
+  const [mainMedia, setMainMedia] = useState(null);
   const [tour, setTour] = useState(null);
   const [relatedTours, setRelatedTours] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -67,7 +67,8 @@ export default function TourDetailPage() {
     guestCount: '',
     note: '',
   });
-const departureOptions = normalizeDepartureOptions(tour?.departure);
+
+  const departureOptions = normalizeDepartureOptions(tour?.departure);
 
   useEffect(() => {
     async function load() {
@@ -90,7 +91,6 @@ const departureOptions = normalizeDepartureOptions(tour?.departure);
   }, [slug]);
 
   useEffect(() => {
-    setMainImage(null);
     setActiveTab('tong-quan');
     setBookingForm({
       customerName: '',
@@ -100,6 +100,42 @@ const departureOptions = normalizeDepartureOptions(tour?.departure);
       note: '',
     });
   }, [slug]);
+
+  const gallery = useMemo(() => {
+    if (!tour) return [];
+    if (Array.isArray(tour.gallery) && tour.gallery.length) return tour.gallery;
+    return tour.image ? [tour.image] : [];
+  }, [tour]);
+
+  const mediaItems = useMemo(() => {
+    const items = [];
+
+    if (tour?.video_url) {
+      items.push({
+        type: 'video',
+        url: tour.video_url,
+        thumb: gallery[0] || tour.image || '',
+      });
+    }
+
+    gallery.forEach((img) => {
+      items.push({
+        type: 'image',
+        url: img,
+        thumb: img,
+      });
+    });
+
+    return items;
+  }, [tour, gallery]);
+
+  useEffect(() => {
+    if (mediaItems.length > 0) {
+      setMainMedia(mediaItems[0]);
+    } else {
+      setMainMedia(null);
+    }
+  }, [mediaItems]);
 
   async function handleBookingSubmit(e) {
     e.preventDefault();
@@ -115,15 +151,15 @@ const departureOptions = normalizeDepartureOptions(tour?.departure);
       setSending(true);
 
       const { data, error } = await supabase.functions.invoke('booking-email', {
-  body: {
-    tourTitle: tour.title,
-    customerName: bookingForm.customerName.trim(),
-    phone: bookingForm.phone.trim(),
-    departureDate: bookingForm.departureDate || '',
-    guestCount: bookingForm.guestCount || '',
-    note: bookingForm.note.trim(),
-  },
-});
+        body: {
+          tourTitle: tour.title,
+          customerName: bookingForm.customerName.trim(),
+          phone: bookingForm.phone.trim(),
+          departureDate: bookingForm.departureDate || '',
+          guestCount: bookingForm.guestCount || '',
+          note: bookingForm.note.trim(),
+        },
+      });
 
       if (error) throw error;
 
@@ -168,9 +204,6 @@ const departureOptions = normalizeDepartureOptions(tour?.departure);
     );
   }
 
-  const gallery = tour.gallery?.length ? tour.gallery : [tour.image];
-  const displayImage = mainImage || gallery[0];
-
   return (
     <div className="bg-[#f7f1e6]">
       <div className="mx-auto max-w-[1180px] px-4 py-6">
@@ -190,11 +223,22 @@ const departureOptions = normalizeDepartureOptions(tour?.departure);
           <div className="space-y-6">
             <div className="overflow-hidden rounded-3xl border border-[#eadfce] bg-white shadow-sm">
               <div className="relative">
-                <img
-                  src={displayImage}
-                  alt={tour.title}
-                  className="h-[320px] w-full object-cover md:h-[460px]"
-                />
+                {mainMedia?.type === 'video' ? (
+                  <iframe
+                    src={mainMedia.url}
+                    title={tour.title}
+                    className="h-[320px] w-full md:h-[460px]"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                ) : (
+                  <img
+                    src={mainMedia?.url || tour.image}
+                    alt={tour.title}
+                    className="h-[320px] w-full object-cover md:h-[460px]"
+                  />
+                )}
+
                 <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/5 to-transparent" />
                 <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
                   <div className="mb-3 inline-flex rounded-full bg-white/90 px-3 py-1 text-xs font-bold uppercase tracking-[0.12em] text-[#8b5a22]">
@@ -209,23 +253,40 @@ const departureOptions = normalizeDepartureOptions(tour?.departure);
                 </div>
               </div>
 
-              <div className="grid gap-3 p-4 sm:grid-cols-4">
-                {gallery.slice(0, 10).map((img, index) => (
-                  <button
-                    key={`${img}-${index}`}
-                    onClick={() => setMainImage(img)}
-                    className={`overflow-hidden rounded-2xl border ${
-                      displayImage === img ? 'border-[#8b5a22]' : 'border-[#eadfce]'
-                    }`}
-                  >
-                    <img
-                      src={img}
-                      alt={`${tour.title} ${index + 1}`}
-                      className="h-24 w-full object-cover"
-                    />
-                  </button>
-                ))}
-              </div>
+              {mediaItems.length > 0 && (
+                <div className="grid grid-cols-4 gap-3 p-4 md:grid-cols-5">
+                  {mediaItems.map((item, index) => {
+                    const isActive =
+                      mainMedia?.type === item.type && mainMedia?.url === item.url;
+
+                    return (
+                      <button
+                        key={`${item.type}-${index}`}
+                        type="button"
+                        onClick={() => setMainMedia(item)}
+                        className={`relative overflow-hidden rounded-2xl border transition ${
+                          isActive
+                            ? 'border-[#8b5a22] ring-2 ring-[#d8b169]'
+                            : 'border-[#eadfce] hover:border-[#cda56a]'
+                        }`}
+                      >
+                        <img
+                          src={item.thumb}
+                          alt={`${tour.title} ${index + 1}`}
+                          className="h-24 w-full object-cover"
+                        />
+                        {item.type === 'video' && (
+                          <div className="absolute inset-0 flex items-center justify-center bg-black/35">
+                            <span className="rounded-full bg-white/90 px-3 py-1 text-xs font-bold text-[#8b5a22]">
+                              Video
+                            </span>
+                          </div>
+                        )}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
@@ -369,23 +430,23 @@ const departureOptions = normalizeDepartureOptions(tour?.departure);
                   />
 
                   <select
-  value={bookingForm.departureDate}
-  onChange={(e) =>
-    setBookingForm((prev) => ({
-      ...prev,
-      departureDate: e.target.value,
-    }))
-  }
-  className="w-full rounded-2xl border border-[#dcc7a6] px-4 py-3"
->
-  <option value="">Chọn ngày khởi hành</option>
+                    value={bookingForm.departureDate}
+                    onChange={(e) =>
+                      setBookingForm((prev) => ({
+                        ...prev,
+                        departureDate: e.target.value,
+                      }))
+                    }
+                    className="w-full rounded-2xl border border-[#dcc7a6] px-4 py-3"
+                  >
+                    <option value="">Chọn ngày khởi hành</option>
 
-  {departureOptions.map((date, index) => (
-    <option key={index} value={date}>
-      {date}
-    </option>
-  ))}
-</select>
+                    {departureOptions.map((date, index) => (
+                      <option key={index} value={date}>
+                        {date}
+                      </option>
+                    ))}
+                  </select>
 
                   <select
                     value={bookingForm.guestCount}
@@ -471,7 +532,7 @@ function InfoCard({ label, value }) {
       <div className="text-xs font-bold uppercase tracking-[0.12em] text-[#9b6a27]">
         {label}
       </div>
-      <div className="mt-2 text-lg font-bold text-[#744815]">{value}</div>
+      <div className="mt-2 text-lg font-bold text-[#744815] whitespace-pre-line">{value}</div>
     </div>
   );
 }

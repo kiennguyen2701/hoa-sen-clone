@@ -31,6 +31,7 @@ const emptyForm = {
   notesText: '',
   itineraryText: '',
   status: 'active',
+  video_url: '',
 };
 
 function textToArray(value) {
@@ -132,8 +133,9 @@ export default function TourAdminPanel() {
       transport: tour.transport || '',
       hotel: tour.hotel || '',
       price: tour.price || '',
-      image: tour.image || '',
+      image: tour.image || '',      
       galleryText: jsonToTextArray(tour.gallery),
+      video_url: tour.video_url || '',
       short_description: tour.short_description || '',
       overview: tour.overview || '',
       highlightsText: jsonToTextArray(tour.highlights),
@@ -179,6 +181,7 @@ export default function TourAdminPanel() {
         price: form.price.trim(),
         image: form.image.trim(),
         gallery: textToArray(form.galleryText),
+        video_url: form.video_url?.trim() || null,
         short_description: form.short_description.trim(),
         overview: form.overview.trim(),
         highlights: textToArray(form.highlightsText),
@@ -405,6 +408,20 @@ export default function TourAdminPanel() {
               placeholder="Ảnh đại diện URL"
               className="rounded-2xl border border-[#dcc7a6] px-4 py-3"
             />
+            <div>
+  <label className="mb-2 block text-sm font-bold text-[#6f4817]">
+    URL Video
+  </label>
+  <input
+    type="text"
+    value={form.video_url || ''}
+    onChange={(e) =>
+      setForm({ ...form, video_url: e.target.value })
+    }
+    placeholder="https://www.youtube.com/embed/VIDEO_ID"
+    className="w-full rounded-2xl border border-[#dcc7a6] px-4 py-3 outline-none"
+  />
+</div>
 
             <textarea
               value={form.galleryText}
