@@ -44,36 +44,14 @@ const defaultHeroSlider = {
     {
       id: 1,
       image:
-        'https://images.unsplash.com/photo-1548013146-72479768bada?q=80&w=1800&auto=format&fit=crop',
-      badge: 'Hành hương cao cấp',
-      title: 'Hoa Sen Xứ Phật',
+        'https://media.cntravellerme.com/photos/68870cae16b3b95603955912/16:9/w_2560%2Cc_limit/072425-Unwritten-Rules-Bali-GettyImages-1469116195.jpg',
+      badge: 'TOUR BALI',
+      title: 'Bali Thiên Đường Nhiệt Đới',
       subtitle:
-        'Hành trình tâm linh, du lịch cao cấp và trải nghiệm chân thật cho khách hàng Việt Nam.',
-      buttonText: 'Khám phá tour',
-      buttonLink: '/du-lich-quoc-te',
-    },
-    {
-      id: 2,
-      image:
-        'https://images.unsplash.com/photo-1525625293386-3f8f99389edd?q=80&w=1800&auto=format&fit=crop',
-      badge: 'Tour quốc tế nổi bật',
-      title: 'Singapore - Malaysia 2026',
-      subtitle:
-        'Khám phá hai quốc gia hiện đại với lịch trình tối ưu, dịch vụ chỉn chu và nhiều lựa chọn linh hoạt.',
-      buttonText: 'Xem ngay',
-      buttonLink: '/du-lich-quoc-te',
-    },
-    {
-      id: 3,
-      image:
-        'https://images.unsplash.com/photo-1507525428034-b723cf961d3e?q=80&w=1800&auto=format&fit=crop',
-      badge: 'Du lịch trong nước',
-      title: 'Biển đảo và nghỉ dưỡng Việt Nam',
-      subtitle:
-        'Lựa chọn các hành trình thư giãn, biển đảo, miền Trung, Tây Bắc và nhiều tuyến trong nước hấp dẫn.',
-      buttonText: 'Xem tour trong nước',
-      buttonLink: '/du-lich-trong-nuoc',
-    },
+        'Check-in Handara Gate, đảo Nusa Penida, Bali Swing và Tanah Lot trong hành trình 5N4Đ trọn vẹn.',
+      buttonText: 'Chi tiết',
+          },
+    
   ],
 };
 
