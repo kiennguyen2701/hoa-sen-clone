@@ -164,7 +164,7 @@ export default function TourDetailPage() {
               </div>
 
               <div className="grid gap-3 p-4 sm:grid-cols-4">
-                {gallery.slice(0, 4).map((img, index) => (
+                {gallery.slice(0, 10).map((img, index) => (
                   <button
                     key={`${img}-${index}`}
                     onClick={() => setMainImage(img)}
