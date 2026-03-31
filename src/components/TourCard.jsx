@@ -1,16 +1,6 @@
 import { Link } from 'react-router-dom';
 
 export default function TourCard({ tour, index }) {
-  const departureLines = tour.departure
-    ? String(tour.departure)
-        .split('\n')
-        .map((item) => item.trim())
-        .filter(Boolean)
-    : [];
-
-  const visibleDepartureLines = departureLines.slice(0, 5);
-  const hasMoreDepartureLines = departureLines.length > 5;
-
   return (
     <div className="group overflow-hidden rounded-2xl border border-[#e8dcc9] bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-xl">
       <div className="relative overflow-hidden">
@@ -46,14 +36,8 @@ export default function TourCard({ tour, index }) {
             <div className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#9e6d2b]">
               Khởi hành
             </div>
-            <div className="mt-1 min-h-[132px] space-y-1 text-[#5f4a33]">
-              {visibleDepartureLines.map((item, idx) => (
-                <div key={idx}>{item}</div>
-              ))}
-              {hasMoreDepartureLines && <div>...</div>}
-            </div>
+            <div className="mt-1 text-[#5f4a33]">{tour.departure}</div>
           </div>
-
           <div className="rounded-xl bg-[#fcfaf5] p-3">
             <div className="text-[10px] font-bold uppercase tracking-[0.12em] text-[#9e6d2b]">
               Giá tour
@@ -77,4 +61,4 @@ export default function TourCard({ tour, index }) {
       </div>
     </div>
   );
-} 
+}
