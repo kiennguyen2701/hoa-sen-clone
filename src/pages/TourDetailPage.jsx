@@ -240,17 +240,19 @@ export default function TourDetailPage() {
                 )}
 
                 <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-black/5 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
-                  <div className="mb-3 inline-flex rounded-full bg-white/90 px-3 py-1 text-xs font-bold uppercase tracking-[0.12em] text-[#8b5a22]">
-                    {tour.category}
-                  </div>
-                  <h1 className="max-w-4xl text-2xl font-black leading-tight text-white md:text-4xl">
-                    {tour.title}
-                  </h1>
-                  <p className="mt-3 max-w-3xl text-sm leading-7 text-white/90 md:text-base">
-                    {tour.short_description || tour.shortDescription}
-                  </p>
-                </div>
+                <div className="absolute bottom-0 left-0 right-0 px-3 pb-2 pt-10 sm:p-5 md:p-6 lg:p-8">
+  <div className="mb-1 inline-flex rounded-full bg-white/90 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-[#8b5a22] sm:mb-2 sm:text-xs">
+    {tour.category}
+  </div>
+
+  <h1 className="max-w-4xl text-[17px] font-black leading-[1.25] text-white sm:text-2xl md:text-4xl">
+    {tour.title}
+  </h1>
+
+  <p className="mt-0.5 max-w-3xl text-[11px] leading-5 text-white/90 sm:mt-1 sm:text-sm sm:leading-6 md:text-base md:leading-7">
+    {tour.short_description || tour.shortDescription}
+  </p>
+</div>
               </div>
 
               {mediaItems.length > 0 && (
