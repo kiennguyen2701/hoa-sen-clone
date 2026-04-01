@@ -214,11 +214,7 @@ export default function HeroSlider({ mobile = false }) {
                 />
               </div>
 
-              {!mobile && (
-                <div>
-                  
-                </div>
-              )}
+              
 
               <div>
                 <label className="mb-1.5 block text-xs font-bold uppercase tracking-[0.12em] text-[#9b6a27]">
