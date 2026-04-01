@@ -216,21 +216,7 @@ export default function HeroSlider({ mobile = false }) {
 
               {!mobile && (
                 <div>
-                  <label className="mb-2 block text-xs font-bold uppercase tracking-[0.12em] text-[#9b6a27]">
-                    Điểm đến
-                  </label>
-                  <select
-                    value={destination}
-                    onChange={(e) => setDestination(e.target.value)}
-                    className="w-full rounded-2xl border border-[#dcc7a6] px-4 py-3 text-[#5f4a33] outline-none transition focus:border-[#8b5a22]"
-                  >
-                    <option value="">Tất cả điểm đến</option>
-                    <option value="an-do-nepal">Ấn Độ - Nepal</option>
-                    <option value="singapore-malaysia">Singapore - Malaysia</option>
-                    <option value="nhat-ban">Nhật Bản</option>
-                    <option value="thai-lan">Thái Lan</option>
-                    <option value="trong-nuoc">Trong nước</option>
-                  </select>
+                  
                 </div>
               )}
 
