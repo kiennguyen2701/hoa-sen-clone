@@ -223,35 +223,36 @@ export default function TourDetailPage() {
           <div className="space-y-6">
             <div className="overflow-hidden rounded-3xl border border-[#eadfce] bg-white shadow-sm">
               <div className="relative">
-                {mainMedia?.type === 'video' ? (
-                  <iframe
-                    src={mainMedia.url}
-                    title={tour.title}
-                    className="h-[320px] w-full md:h-[460px]"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    allowFullScreen
-                  />
-                ) : (
-                  <img
-                    src={mainMedia?.url || tour.image}
-                    alt={tour.title}
-                    className="h-[320px] w-full object-cover md:h-[460px]"
-                  />
-                )}
+  {mainMedia?.type === 'video' ? (
+    <iframe
+      src={getEmbedUrl(mainMedia.url)}
+      title={tour.title}
+      className="h-[280px] w-full sm:h-[320px] md:h-[420px] lg:h-[460px]"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowFullScreen
+    />
+  ) : (
+    <img
+      src={mainMedia?.url || tour.image}
+      alt={tour.title}
+      className="h-[280px] w-full object-cover sm:h-[320px] md:h-[420px] lg:h-[460px]"
+    />
+  )}
 
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/50 via-black/5 to-transparent" />
-                <div className="absolute bottom-0 left-0 right-0 p-6 md:p-8">
-                  <div className="mb-3 inline-flex rounded-full bg-white/90 px-3 py-1 text-xs font-bold uppercase tracking-[0.12em] text-[#8b5a22]">
-                    {tour.category}
-                  </div>
-                  <h1 className="max-w-4xl text-2xl font-black leading-tight text-white md:text-4xl">
-                    {tour.title}
-                  </h1>
-                  <p className="mt-3 max-w-3xl text-sm leading-7 text-white/90 md:text-base">
-                    {tour.short_description || tour.shortDescription}
-                  </p>
-                </div>
-              </div>
+  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
+
+  <div className="absolute bottom-0 left-0 right-0 p-3 sm:p-5 md:p-6 lg:p-8">
+    <div className="mb-2 inline-flex rounded-full bg-white/90 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.12em] text-[#8b5a22] sm:text-xs">
+      {tour.category}
+    </div>
+    <h1 className="max-w-4xl text-lg font-black leading-snug text-white sm:text-2xl md:text-4xl">
+      {tour.title}
+    </h1>
+    <p className="mt-1 max-w-3xl text-[11px] leading-5 text-white/90 sm:text-sm sm:leading-6 md:text-base md:leading-7">
+      {tour.short_description || tour.shortDescription}
+    </p>
+  </div>
+</div>
 
               {mediaItems.length > 0 && (
                 <div className="grid grid-cols-4 gap-3 p-4 md:grid-cols-5">
