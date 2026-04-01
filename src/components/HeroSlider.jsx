@@ -95,7 +95,7 @@ export default function HeroSlider({ mobile = false }) {
                 <h1
                   className={
                     mobile
-                      ? 'mt-3 max-w-[95%] text-[34px] font-black leading-[1.02]'
+                      ? 'mt-2 max-w-[95%] text-[26px] font-black leading-[1.1]'
                       : 'mt-5 max-w-[700px] text-4xl font-black leading-tight md:text-6xl'
                   }
                 >
@@ -105,7 +105,7 @@ export default function HeroSlider({ mobile = false }) {
                 <p
                   className={
                     mobile
-                      ? 'mt-2 max-w-[95%] text-[13px] leading-6 text-white/90'
+                      ? 'mt-2 max-w-[95%] text-[11px] leading-5 text-white/90'
                       : 'mt-5 max-w-[620px] text-sm leading-7 text-white/90 md:text-lg md:leading-8'
                   }
                 >
@@ -117,7 +117,7 @@ export default function HeroSlider({ mobile = false }) {
                     to={activeSlide.buttonLink || '/du-lich-quoc-te'}
                     className={
                       mobile
-                        ? 'inline-flex items-center rounded-2xl bg-[#8b5a22] px-4 py-2.5 text-xs font-bold uppercase tracking-[0.06em] text-white transition hover:bg-[#744815]'
+                        ? 'inline-flex items-center rounded-2xl bg-[#8b5a22] px-3 py-2 text-[11px] font-bold uppercase tracking-[0.06em] text-white transition hover:bg-[#744815]'
                         : 'inline-flex items-center rounded-2xl bg-[#8b5a22] px-6 py-3 text-sm font-bold uppercase tracking-[0.08em] text-white transition hover:bg-[#744815]'
                     }
                   >
