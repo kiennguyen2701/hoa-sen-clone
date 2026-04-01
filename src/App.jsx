@@ -21,13 +21,13 @@ function AppContent() {
 
   return (
     <div className="min-h-screen bg-[#f7f1e6] text-[#3f2d1d]">
-      <div className="fixed right-4 top-1/2 z-50 flex -translate-y-1/2 flex-col gap-3 xl:flex">
+      <div className="fixed right-3 top-1/2 z-50 flex -translate-y-1/2 flex-col gap-2">
   {/* Zalo */}
   <a
   href="https://zalo.me/0965692959"
   target="_blank"
   rel="noopener noreferrer"
-  className="flex h-12 w-12 items-center justify-center rounded-full bg-white shadow-lg transition hover:scale-105"
+  className="flex h-10 w-10 items-center justify-center rounded-full ..."
   title="Chat Zalo"
 >
   <img
@@ -42,7 +42,7 @@ function AppContent() {
     href="https://www.facebook.com/"
     target="_blank"
     rel="noopener noreferrer"
-    className="flex h-12 w-12 items-center justify-center rounded-full bg-[#1877f2] text-lg font-bold text-white shadow-lg transition hover:scale-105"
+    className="flex h-10 w-10 items-center justify-center rounded-full bg-[#1877f2] text-lg font-bold text-white shadow-lg transition hover:scale-105"
     title="Facebook"
   >
     f
@@ -51,7 +51,7 @@ function AppContent() {
   {/* Call phone */}
   <a
     href="tel:0965692959"
-    className="flex h-12 w-12 items-center justify-center rounded-full bg-[#d0892d] text-lg text-white shadow-lg transition hover:scale-105"
+    className="flex h-10 w-10 items-center justify-center rounded-full bg-[#d0892d] text-lg text-white shadow-lg transition hover:scale-105"
     title="Gọi ngay"
   >
     ☎
