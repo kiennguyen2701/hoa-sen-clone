@@ -67,6 +67,14 @@ export default function TourCard({ tour, index }) {
             <div className="mt-2 text-[18px] font-black leading-7 text-[#744815] sm:text-[20px] lg:text-[18px]">
               {tour.price}
             </div>
+
+            <div className="mt-4 text-[10px] font-bold uppercase tracking-[0.14em] text-[#9e6d2b]">
+              Phương tiện
+            </div>
+
+            <div className="mt-1 text-sm leading-6 text-[#5f4a33]">
+              {tour.transport || 'Liên hệ'}
+            </div>
           </div>
         </div>
 
