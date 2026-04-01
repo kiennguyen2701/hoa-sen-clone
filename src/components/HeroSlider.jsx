@@ -60,12 +60,12 @@ export default function HeroSlider({ mobile = false }) {
       <div
         className={
           mobile
-            ? 'mx-auto max-w-[1180px] px-4 pb-4 pt-4'
+            ? 'mx-auto max-w-[1180px] px-4 pb-3 pt-4'
             : 'mx-auto max-w-[1180px] px-4 pb-6 pt-5'
         }
       >
         <div className="relative overflow-hidden rounded-[28px] border border-[#eadfce] bg-white shadow-sm md:rounded-[32px]">
-          <div className={`relative ${mobile ? 'h-[260px]' : 'h-[380px] md:h-[500px]'}`}>
+          <div className={`relative ${mobile ? 'h-[240px]' : 'h-[380px] md:h-[500px]'}`}>
             <img
               src={activeSlide.image}
               alt={activeSlide.title}
@@ -78,7 +78,7 @@ export default function HeroSlider({ mobile = false }) {
               <div
                 className={
                   mobile
-                    ? 'max-w-[92%] px-4 py-5 text-white'
+                    ? 'max-w-[92%] px-4 py-4 text-white'
                     : 'max-w-[760px] px-6 py-8 text-white md:px-10 lg:px-14'
                 }
               >
@@ -95,7 +95,7 @@ export default function HeroSlider({ mobile = false }) {
                 <h1
                   className={
                     mobile
-                      ? 'mt-3 max-w-[95%] text-2xl font-black leading-tight'
+                      ? 'mt-3 max-w-[95%] text-[34px] font-black leading-[1.02]'
                       : 'mt-5 max-w-[700px] text-4xl font-black leading-tight md:text-6xl'
                   }
                 >
@@ -105,7 +105,7 @@ export default function HeroSlider({ mobile = false }) {
                 <p
                   className={
                     mobile
-                      ? 'mt-3 max-w-[95%] text-xs leading-6 text-white/90'
+                      ? 'mt-2 max-w-[95%] text-[13px] leading-6 text-white/90'
                       : 'mt-5 max-w-[620px] text-sm leading-7 text-white/90 md:text-lg md:leading-8'
                   }
                 >
@@ -186,7 +186,7 @@ export default function HeroSlider({ mobile = false }) {
           </div>
         </div>
 
-        <div className={mobile ? '-mt-5 relative z-20 px-1' : '-mt-8 relative z-20 px-2 md:px-6'}>
+        <div className={mobile ? '-mt-4 relative z-20 px-1' : '-mt-8 relative z-20 px-2 md:px-6'}>
           <form
             onSubmit={handleSearch}
             className={
@@ -203,7 +203,7 @@ export default function HeroSlider({ mobile = false }) {
               }
             >
               <div>
-                <label className="mb-2 block text-xs font-bold uppercase tracking-[0.12em] text-[#9b6a27]">
+                <label className="mb-1.5 block text-xs font-bold uppercase tracking-[0.12em] text-[#9b6a27]">
                   Tìm tour
                 </label>
                 <input
@@ -214,26 +214,28 @@ export default function HeroSlider({ mobile = false }) {
                 />
               </div>
 
-              <div>
-                <label className="mb-2 block text-xs font-bold uppercase tracking-[0.12em] text-[#9b6a27]">
-                  Điểm đến
-                </label>
-                <select
-                  value={destination}
-                  onChange={(e) => setDestination(e.target.value)}
-                  className="w-full rounded-2xl border border-[#dcc7a6] px-4 py-3 text-[#5f4a33] outline-none transition focus:border-[#8b5a22]"
-                >
-                  <option value="">Tất cả điểm đến</option>
-                  <option value="an-do-nepal">Ấn Độ - Nepal</option>
-                  <option value="singapore-malaysia">Singapore - Malaysia</option>
-                  <option value="nhat-ban">Nhật Bản</option>
-                  <option value="thai-lan">Thái Lan</option>
-                  <option value="trong-nuoc">Trong nước</option>
-                </select>
-              </div>
+              {!mobile && (
+                <div>
+                  <label className="mb-2 block text-xs font-bold uppercase tracking-[0.12em] text-[#9b6a27]">
+                    Điểm đến
+                  </label>
+                  <select
+                    value={destination}
+                    onChange={(e) => setDestination(e.target.value)}
+                    className="w-full rounded-2xl border border-[#dcc7a6] px-4 py-3 text-[#5f4a33] outline-none transition focus:border-[#8b5a22]"
+                  >
+                    <option value="">Tất cả điểm đến</option>
+                    <option value="an-do-nepal">Ấn Độ - Nepal</option>
+                    <option value="singapore-malaysia">Singapore - Malaysia</option>
+                    <option value="nhat-ban">Nhật Bản</option>
+                    <option value="thai-lan">Thái Lan</option>
+                    <option value="trong-nuoc">Trong nước</option>
+                  </select>
+                </div>
+              )}
 
               <div>
-                <label className="mb-2 block text-xs font-bold uppercase tracking-[0.12em] text-[#9b6a27]">
+                <label className="mb-1.5 block text-xs font-bold uppercase tracking-[0.12em] text-[#9b6a27]">
                   Tháng đi
                 </label>
                 <select
@@ -258,7 +260,7 @@ export default function HeroSlider({ mobile = false }) {
               </div>
 
               <div>
-                <label className="mb-2 block text-xs font-bold uppercase tracking-[0.12em] text-[#9b6a27]">
+                <label className="mb-1.5 block text-xs font-bold uppercase tracking-[0.12em] text-[#9b6a27]">
                   Loại tour
                 </label>
                 <select

@@ -40,8 +40,8 @@ export default function TourCard({ tour, index }) {
         </div>
       </div>
 
-      <div className="space-y-4 p-4 sm:p-5">
-        <h3 className="min-h-[72px] text-[17px] font-extrabold leading-7 text-[#3d2a17] sm:min-h-[76px] sm:text-[20px] sm:leading-8 lg:min-h-[64px] lg:text-lg lg:leading-7">
+      <div className="space-y-3 p-4 sm:p-5">
+        <h3 className="min-h-[58px] text-[17px] font-extrabold leading-7 text-[#3d2a17] sm:min-h-[64px] sm:text-[20px] sm:leading-8 lg:min-h-[64px] lg:text-lg lg:leading-7">
           {tour.title}
         </h3>
 
@@ -51,7 +51,7 @@ export default function TourCard({ tour, index }) {
               Khởi hành
             </div>
 
-            <div className="mt-2 min-h-[152px] space-y-1 text-sm leading-7 text-[#5f4a33] sm:min-h-[156px] lg:min-h-[138px]">
+            <div className="mt-2 min-h-[128px] space-y-0.5 text-sm leading-6 text-[#5f4a33] sm:min-h-[132px] lg:min-h-[124px]">
               {visibleDepartureLines.map((item, idx) => (
                 <div key={idx}>{item}</div>
               ))}
@@ -70,7 +70,7 @@ export default function TourCard({ tour, index }) {
           </div>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 pt-1">
           <Link
             to={`/tour/${tour.slug}`}
             className="inline-flex flex-1 items-center justify-center rounded-2xl bg-[#8b5a22] px-4 py-3 text-sm font-bold uppercase tracking-[0.06em] text-white transition hover:bg-[#744815]"
