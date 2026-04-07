@@ -1,228 +1,189 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { useHeroSliderSettings } from '../hooks/useSiteSettings';
+import { useEffect, useState } from 'react';
+import { getSetting, upsertSetting } from '../../lib/settingsApi';
+import { listToursForAdmin } from '../../lib/toursApi';
 
-export default function HeroSlider({ mobile = false }) {
-  const heroSettings = useHeroSliderSettings();
-  const slides = heroSettings.slides || [];
+const emptySlide = {
+  id: '',
+  image: '',
+  badge: '',
+  title: '',
+  subtitle: '',
+  buttonText: '',
+  buttonLink: '',
+};
 
-  const [current, setCurrent] = useState(0);
-  const [keyword, setKeyword] = useState('');
-  const [tourType, setTourType] = useState('');
-
-  const touchStartX = useRef(0);
-  const touchEndX = useRef(0);
-
-  useEffect(() => {
-    if (!slides.length) return;
-
-    const timer = setInterval(() => {
-      setCurrent((prev) => (prev + 1) % slides.length);
-    }, 5000);
-
-    return () => clearInterval(timer);
-  }, [slides]);
+export default function HeroSliderSettingsPanel() {
+  const [slides, setSlides] = useState([emptySlide, emptySlide, emptySlide]);
+  const [saving, setSaving] = useState(false);
+  const [tours, setTours] = useState([]);
 
   useEffect(() => {
-    if (current > slides.length - 1) {
-      setCurrent(0);
+    async function load() {
+      const sliderData = await getSetting('hero_slider');
+      const toursData = await listToursForAdmin();
+
+      setTours(toursData || []);
+
+      if (sliderData?.slides?.length) {
+        const normalized = [...sliderData.slides];
+        while (normalized.length < 3) {
+          normalized.push({ ...emptySlide, id: Date.now() + Math.random() });
+        }
+        setSlides(normalized.slice(0, 3));
+      } else {
+        setSlides([
+          { ...emptySlide, id: 1 },
+          { ...emptySlide, id: 2 },
+          { ...emptySlide, id: 3 },
+        ]);
+      }
     }
-  }, [slides, current]);
 
-  const activeSlide = useMemo(() => slides[current], [current, slides]);
+    load();
+  }, []);
 
-  function prevSlide(e) {
-    if (e) e.stopPropagation();
-    if (!slides.length) return;
-    setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
+  function updateSlide(index, key, value) {
+    const next = [...slides];
+    next[index] = {
+      ...next[index],
+      [key]: value,
+    };
+    setSlides(next);
   }
 
-  function nextSlide(e) {
-    if (e) e.stopPropagation();
-    if (!slides.length) return;
-    setCurrent((prev) => (prev + 1) % slides.length);
+  function handleTourSelect(index, slug) {
+    const selectedTour = tours.find((tour) => tour.slug === slug);
+    if (!selectedTour) return;
+
+    const next = [...slides];
+    next[index] = {
+      ...next[index],
+      buttonLink: `/tour/${selectedTour.slug}`,
+      title: next[index].title || selectedTour.title,
+      subtitle:
+        next[index].subtitle ||
+        selectedTour.short_description ||
+        selectedTour.shortDescription ||
+        '',
+      image: next[index].image || selectedTour.image || '',
+    };
+    setSlides(next);
   }
 
-  function handleSlideClick() {
-    const targetLink = activeSlide?.buttonLink || activeSlide?.link || '/du-lich-quoc-te';
-    window.location.href = targetLink;
-  }
+  async function handleSave() {
+    try {
+      setSaving(true);
 
-  function handleTouchStart(e) {
-    touchStartX.current = e.changedTouches[0].clientX;
-  }
+      const payload = {
+        slides: slides.map((slide, index) => ({
+          id: slide.id || index + 1,
+          image: slide.image,
+          badge: slide.badge,
+          title: slide.title,
+          subtitle: slide.subtitle,
+          buttonText: slide.buttonText,
+          buttonLink: slide.buttonLink,
+        })),
+      };
 
-  function handleTouchEnd(e) {
-    touchEndX.current = e.changedTouches[0].clientX;
-    const deltaX = touchStartX.current - touchEndX.current;
-
-    if (Math.abs(deltaX) < 50) return;
-
-    if (deltaX > 0) {
-      nextSlide();
-    } else {
-      prevSlide();
+      await upsertSetting('hero_slider', payload);
+      alert('Lưu banner thành công');
+    } catch (error) {
+      alert(error.message);
+    } finally {
+      setSaving(false);
     }
   }
-
-  function handleSearch(e) {
-    e.preventDefault();
-
-    const params = new URLSearchParams();
-
-    if (keyword.trim()) params.set('q', keyword.trim());
-    if (tourType) params.set('type', tourType);
-
-    window.location.href = `/tim-kiem${params.toString() ? `?${params.toString()}` : ''}`;
-  }
-
-  if (!activeSlide) return null;
 
   return (
-    <section className="bg-[#f7f1e6]">
-      <div
-        className={
-          mobile
-            ? 'mx-auto max-w-[1180px] px-4 pb-3 pt-4'
-            : 'mx-auto max-w-[1180px] px-4 pb-6 pt-5'
-        }
-      >
-        <div className="relative overflow-hidden rounded-[28px] border border-[#eadfce] bg-white shadow-sm md:rounded-[32px]">
-          <div
-            className={`relative cursor-pointer ${mobile ? 'h-[240px]' : 'h-[380px] md:h-[500px]'}`}
-            onClick={handleSlideClick}
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
-          >
-            <img
-              src={activeSlide.image}
-              alt={activeSlide.title}
-              className="h-full w-full object-cover"
-            />
+    <div className="mt-8 rounded-3xl border border-[#eadfce] bg-white p-6 shadow-sm">
+      <h2 className="text-2xl font-black text-[#714b1f]">Cài đặt Banner Slider</h2>
+      <p className="mt-2 text-sm text-[#6b5840]">
+        Anh có thể chỉnh ảnh, nội dung và chọn đúng tour để nút bấm dẫn về trang chi tiết tour.
+      </p>
 
-            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(25,16,8,0.18)_0%,rgba(25,16,8,0.08)_35%,rgba(25,16,8,0.34)_100%)]" />
-
-            <div className="absolute inset-0">
-              <div
-                className={
-                  mobile
-                    ? 'absolute left-1/2 top-4 -translate-x-1/2'
-                    : 'absolute left-1/2 top-8 -translate-x-1/2'
-                }
-              >
-                <div
-                  className={
-                    mobile
-                      ? 'inline-flex whitespace-nowrap rounded-full border border-white/25 bg-black/20 px-4 py-2 text-[11px] font-extrabold uppercase tracking-[0.18em] text-white/95 backdrop-blur-sm'
-                      : 'inline-flex whitespace-nowrap rounded-full border border-white/25 bg-black/20 px-6 py-2.5 text-sm font-extrabold uppercase tracking-[0.22em] text-white/95 backdrop-blur-sm'
-                  }
-                >
-                  {activeSlide.badge}
-                </div>
-              </div>
+      <div className="mt-6 space-y-8">
+        {slides.map((slide, index) => (
+          <div key={index} className="rounded-2xl border border-[#eadfce] bg-[#fcfaf5] p-5">
+            <div className="mb-4 text-lg font-extrabold text-[#7c511f]">
+              Slide {index + 1}
             </div>
 
-            {!mobile && (
-              <>
-                <button
-                  onClick={prevSlide}
-                  className="absolute left-4 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-xl font-bold text-[#744815] shadow transition hover:bg-white"
-                >
-                  ‹
-                </button>
+            <div className="grid gap-4">
+              <input
+                className="rounded-2xl border border-[#dcc7a6] px-4 py-3"
+                placeholder="Link ảnh banner"
+                value={slide.image || ''}
+                onChange={(e) => updateSlide(index, 'image', e.target.value)}
+              />
 
-                <button
-                  onClick={nextSlide}
-                  className="absolute right-4 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-xl font-bold text-[#744815] shadow transition hover:bg-white"
-                >
-                  ›
-                </button>
-              </>
-            )}
+              <input
+                className="rounded-2xl border border-[#dcc7a6] px-4 py-3"
+                placeholder="Badge"
+                value={slide.badge || ''}
+                onChange={(e) => updateSlide(index, 'badge', e.target.value)}
+              />
 
-            <div
-              className={
-                mobile
-                  ? 'absolute bottom-3 left-1/2 z-10 flex -translate-x-1/2 items-center gap-2 rounded-full bg-white/80 px-3 py-1.5 shadow backdrop-blur-sm'
-                  : 'absolute bottom-5 left-1/2 z-10 flex -translate-x-1/2 items-center gap-3 rounded-full bg-white/80 px-4 py-2 shadow backdrop-blur-sm'
-              }
-            >
-              {slides.map((slide, index) => (
-                <button
-                  key={slide.id || index}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setCurrent(index);
-                  }}
-                  className={`rounded-full transition-all ${
-                    current === index
-                      ? mobile
-                        ? 'h-2.5 w-8 bg-[#8b5a22]'
-                        : 'h-3 w-10 bg-[#8b5a22]'
-                      : mobile
-                        ? 'h-2.5 w-2.5 bg-[#d7c2a0]'
-                        : 'h-3 w-3 bg-[#d7c2a0]'
-                  }`}
-                />
-              ))}
+              <input
+                className="rounded-2xl border border-[#dcc7a6] px-4 py-3"
+                placeholder="Tiêu đề banner"
+                value={slide.title || ''}
+                onChange={(e) => updateSlide(index, 'title', e.target.value)}
+              />
+
+              <textarea
+                className="min-h-[100px] rounded-2xl border border-[#dcc7a6] px-4 py-3"
+                placeholder="Mô tả ngắn"
+                value={slide.subtitle || ''}
+                onChange={(e) => updateSlide(index, 'subtitle', e.target.value)}
+              />
+
+              <input
+                className="rounded-2xl border border-[#dcc7a6] px-4 py-3"
+                placeholder="Text nút"
+                value={slide.buttonText || ''}
+                onChange={(e) => updateSlide(index, 'buttonText', e.target.value)}
+              />
+
+              <input
+                className="rounded-2xl border border-[#dcc7a6] px-4 py-3"
+                placeholder="Link nút (vd: /tour/ten-tour)"
+                value={slide.buttonLink || ''}
+                onChange={(e) => updateSlide(index, 'buttonLink', e.target.value)}
+              />
+
+              <select
+                className="rounded-2xl border border-[#dcc7a6] px-4 py-3 text-[#6b5840]"
+                defaultValue=""
+                onChange={(e) => handleTourSelect(index, e.target.value)}
+              >
+                <option value="">Chọn nhanh tour để gắn nút điều hướng</option>
+                {tours.map((tour) => (
+                  <option key={tour.id} value={tour.slug}>
+                    {tour.title}
+                  </option>
+                ))}
+              </select>
+
+              {slide.buttonLink && (
+                <div className="text-sm text-[#6b5840]">
+                  Link hiện tại: <span className="font-bold text-[#8b5a22]">{slide.buttonLink}</span>
+                </div>
+              )}
             </div>
           </div>
-        </div>
-
-        <div className={mobile ? '-mt-4 relative z-20 px-1' : '-mt-8 relative z-20 px-2 md:px-6'}>
-          <form
-            onSubmit={handleSearch}
-            className={
-              mobile
-                ? 'rounded-[24px] border border-[#eadfce] bg-white p-4 shadow-xl'
-                : 'rounded-[28px] border border-[#eadfce] bg-white p-4 shadow-xl md:p-5'
-            }
-          >
-            <div
-              className={
-                mobile
-                  ? 'grid gap-3'
-                  : 'grid gap-4 lg:grid-cols-[1.4fr_1fr_auto]'
-              }
-            >
-              <div>
-                <label className="mb-1.5 block text-xs font-bold uppercase tracking-[0.12em] text-[#9b6a27]">
-                  Tìm tour
-                </label>
-                <input
-                  value={keyword}
-                  onChange={(e) => setKeyword(e.target.value)}
-                  className="w-full rounded-2xl border border-[#dcc7a6] px-4 py-3 outline-none transition focus:border-[#8b5a22]"
-                  placeholder="Nhập tên tour, điểm đến..."
-                />
-              </div>
-
-              <div>
-                <label className="mb-1.5 block text-xs font-bold uppercase tracking-[0.12em] text-[#9b6a27]">
-                  Loại tour
-                </label>
-                <select
-                  value={tourType}
-                  onChange={(e) => setTourType(e.target.value)}
-                  className="w-full rounded-2xl border border-[#dcc7a6] px-4 py-3 text-[#5f4a33] outline-none transition focus:border-[#8b5a22]"
-                >
-                  <option value="">Tất cả</option>
-                  <option value="quoc-te">Tour Quốc Tế</option>
-                  <option value="trong-nuoc">Tour Trong Nước</option>
-                </select>
-              </div>
-
-              <div className="flex items-end">
-                <button
-                  type="submit"
-                  className="w-full rounded-2xl bg-[#8b5a22] px-6 py-3 text-sm font-bold uppercase tracking-[0.08em] text-white transition hover:bg-[#744815] lg:w-auto"
-                >
-                  Tìm kiếm
-                </button>
-              </div>
-            </div>
-          </form>
-        </div>
+        ))}
       </div>
-    </section>
+
+      <div className="mt-6">
+        <button
+          onClick={handleSave}
+          disabled={saving}
+          className="rounded-2xl bg-[#8b5a22] px-6 py-3 text-sm font-bold uppercase tracking-[0.08em] text-white"
+        >
+          {saving ? 'Đang lưu...' : 'Lưu Banner'}
+        </button>
+      </div>
+    </div>
   );
 }

@@ -7,7 +7,6 @@ export default function HeroSlider({ mobile = false }) {
 
   const [current, setCurrent] = useState(0);
   const [keyword, setKeyword] = useState('');
-  const [month, setMonth] = useState('');
   const [tourType, setTourType] = useState('');
 
   const touchStartX = useRef(0);
@@ -71,7 +70,6 @@ export default function HeroSlider({ mobile = false }) {
     const params = new URLSearchParams();
 
     if (keyword.trim()) params.set('q', keyword.trim());
-    if (month) params.set('month', month);
     if (tourType) params.set('type', tourType);
 
     window.location.href = `/tim-kiem${params.toString() ? `?${params.toString()}` : ''}`;
@@ -183,7 +181,7 @@ export default function HeroSlider({ mobile = false }) {
               className={
                 mobile
                   ? 'grid gap-3'
-                  : 'grid gap-4 lg:grid-cols-[1.25fr_1fr_1fr_auto]'
+                  : 'grid gap-4 lg:grid-cols-[1.4fr_1fr_auto]'
               }
             >
               <div>
@@ -200,31 +198,6 @@ export default function HeroSlider({ mobile = false }) {
 
               <div>
                 <label className="mb-1.5 block text-xs font-bold uppercase tracking-[0.12em] text-[#9b6a27]">
-                  Tháng đi
-                </label>
-                <select
-                  value={month}
-                  onChange={(e) => setMonth(e.target.value)}
-                  className="w-full rounded-2xl border border-[#dcc7a6] px-4 py-3 text-[#5f4a33] outline-none transition focus:border-[#8b5a22]"
-                >
-                  <option value="">Chọn tháng</option>
-                  <option value="1">Tháng 1</option>
-                  <option value="2">Tháng 2</option>
-                  <option value="3">Tháng 3</option>
-                  <option value="4">Tháng 4</option>
-                  <option value="5">Tháng 5</option>
-                  <option value="6">Tháng 6</option>
-                  <option value="7">Tháng 7</option>
-                  <option value="8">Tháng 8</option>
-                  <option value="9">Tháng 9</option>
-                  <option value="10">Tháng 10</option>
-                  <option value="11">Tháng 11</option>
-                  <option value="12">Tháng 12</option>
-                </select>
-              </div>
-
-              <div>
-                <label className="mb-1.5 block text-xs font-bold uppercase tracking-[0.12em] text-[#9b6a27]">
                   Loại tour
                 </label>
                 <select
@@ -233,10 +206,8 @@ export default function HeroSlider({ mobile = false }) {
                   className="w-full rounded-2xl border border-[#dcc7a6] px-4 py-3 text-[#5f4a33] outline-none transition focus:border-[#8b5a22]"
                 >
                   <option value="">Tất cả</option>
-                  <option value="hanh-huong">Hành hương</option>
-                  <option value="quoc-te">Quốc tế</option>
-                  <option value="trong-nuoc">Trong nước</option>
-                  <option value="nghi-duong">Nghỉ dưỡng</option>
+                  <option value="quoc-te">Tour Quốc Tế</option>
+                  <option value="trong-nuoc">Tour Trong Nước</option>
                 </select>
               </div>
 
