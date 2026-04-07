@@ -18,10 +18,12 @@ export default function TourCard({ tour }) {
   const departures = normalizeDepartureOptions(tour?.departure).slice(0, 3);
 
   return (
-    <article className="overflow-hidden rounded-[28px] border border-[#eadfce] bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md">
-      
-      {/* IMAGE - CHIẾM PHẦN LỚN */}
-      <div className="relative h-[300px] sm:h-[320px] lg:h-[280px] overflow-hidden">
+    <Link
+      to={`/tour/${tour.slug}`}
+      className="block overflow-hidden rounded-[28px] border border-[#eadfce] bg-white shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+    >
+      {/* IMAGE */}
+      <div className="relative h-[300px] overflow-hidden sm:h-[320px] lg:h-[280px]">
         <img
           src={tour.image}
           alt={tour.title}
@@ -37,11 +39,11 @@ export default function TourCard({ tour }) {
         </div>
 
         <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between">
-  <div className="text-white">
-    <div className="text-[18px] font-black">
-      {tour.duration || 'Liên hệ'}
-    </div>
-  </div>
+          <div className="text-white">
+            <div className="text-[18px] font-black">
+              {tour.duration || 'Liên hệ'}
+            </div>
+          </div>
 
           <div className="rounded-full bg-[#a56b28] px-4 py-2 text-[15px] font-black text-white">
             {tour.price || 'Liên hệ'}
@@ -49,7 +51,7 @@ export default function TourCard({ tour }) {
         </div>
       </div>
 
-      {/* CONTENT - THU NHỎ */}
+      {/* CONTENT */}
       <div className="p-4">
         <h3 className="line-clamp-2 min-h-[56px] text-[22px] font-black leading-8 text-[#4f3519]">
           {tour.title}
@@ -78,8 +80,9 @@ export default function TourCard({ tour }) {
           </div>
 
           <div>
-            <div><div className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#a26d1a]">
-                GIÁ CHỈ TỪ
+            <div>
+              <div className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#a26d1a]">
+                Giá chỉ từ
               </div>
               <div className="mt-2 text-[16px] font-black text-[#6a4721]">
                 {tour.price || 'Liên hệ'}
@@ -96,23 +99,7 @@ export default function TourCard({ tour }) {
             </div>
           </div>
         </div>
-
-        <div className="mt-4 flex gap-3">
-          <Link
-            to={`/tour/${tour.slug}`}
-            className="flex-1 rounded-2xl bg-[#a56b28] px-4 py-3 text-center text-[14px] font-bold uppercase tracking-[0.08em] text-white"
-          >
-            Xem chi tiết
-          </Link>
-
-          <a
-            href="tel:0965692959"
-            className="rounded-2xl border border-[#cfa871] px-5 py-3 text-[14px] font-bold text-[#8b5a22]"
-          >
-            Liên hệ
-          </a>
-        </div>
       </div>
-    </article>
+    </Link>
   );
 }
