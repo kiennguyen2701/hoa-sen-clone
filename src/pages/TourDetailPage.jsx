@@ -130,7 +130,7 @@ export default function TourDetailPage() {
   const [relatedTours, setRelatedTours] = useState([]);
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
-  const [referralCode, setReferralCode] = useState('');
+  const [referralCode] = useState(getSavedCollaboratorCode());
 
   const [bookingForm, setBookingForm] = useState({
     customerName: '',
@@ -142,10 +142,6 @@ export default function TourDetailPage() {
   });
 
   const departureOptions = normalizeDepartureOptions(tour?.departure);
-
-  useEffect(() => {
-    setReferralCode(getSavedCollaboratorCode());
-  }, [slug]);
 
   useEffect(() => {
     async function load() {
@@ -296,7 +292,6 @@ export default function TourDetailPage() {
   return (
     <div className="bg-[#f7f1e6]">
       <div className="mx-auto max-w-[1240px] px-4 py-5 sm:py-6 lg:py-8">
-        {/* Breadcrumb */}
         <div className="mb-4 text-xs leading-6 text-[#7a5a34] sm:mb-5 sm:text-sm">
           <Link to="/" className="hover:text-[#8b5a22]">
             Trang chủ
@@ -309,25 +304,22 @@ export default function TourDetailPage() {
           <span className="font-semibold text-[#8b5a22]">{tour.title}</span>
         </div>
 
-        {/* Header tour */}
         <div className="mb-6 rounded-[28px] border border-[#eadfce] bg-white p-5 shadow-sm sm:p-7 lg:p-8">
           <div className="inline-flex rounded-full bg-[#fcf4e8] px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-[#a26d1a]">
             {tour.category || 'Du lịch quốc tế'}
           </div>
 
-          <h1 className="mt-4 text-3xl font-black leading-tight text-[#714b1f] sm:text-4xl lg:text-5xl">
+          <h1 className="mt-4 text-[28px] font-black leading-tight text-[#714b1f] sm:text-[34px] lg:text-[40px]">
             {tour.title}
           </h1>
 
-          <p className="mt-4 max-w-5xl text-[15px] leading-8 text-[#5f4a33]">
+          <p className="mt-4 max-w-4xl text-[15px] leading-8 text-[#5f4a33] lg:text-base">
             {tour.short_description || tour.shortDescription || tour.description}
           </p>
         </div>
 
         <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
-          {/* LEFT */}
           <div className="space-y-6">
-            {/* Gallery */}
             <section className="rounded-[28px] border border-[#eadfce] bg-white p-4 shadow-sm sm:p-5">
               <div className="overflow-hidden rounded-[24px] bg-[#f3ede4]">
                 {mainMedia?.type === 'video' ? (
@@ -382,8 +374,8 @@ export default function TourDetailPage() {
               )}
             </section>
 
-            {/* Info cards */}
-            <section className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+            {/* FIX: 4 ô theo hàng ngang trên mobile */}
+            <section className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
               <InfoCard label="Thời lượng" value={tour.duration || 'Liên hệ'} />
               <InfoCard
                 label="Khởi hành"
@@ -393,15 +385,14 @@ export default function TourDetailPage() {
               <InfoCard label="Tiêu chuẩn" value={tour.hotel || 'Liên hệ'} />
             </section>
 
-            {/* Mobile booking quick card */}
-            <section className="xl:hidden rounded-[28px] border border-[#eadfce] bg-white p-5 shadow-sm">
-              <div className="text-xs font-bold uppercase tracking-[0.12em] text-[#9b6a27]">
-                Giá từ
-              </div>
+            {/* FIX: chỉ còn 1 block giá trên mobile, không trùng */}
+            <section className="xl:hidden rounded-[28px] border border-[#eadfce] bg-white p-5 shadow-sm sm:p-6">
+              <div className="text-xs font-bold uppercase tracking-[0.12em] text-[#9b6a27]">Đặt tour</div>
               <div className="mt-2 text-3xl font-black text-[#714b1f]">{tour.price || 'Liên hệ'}</div>
               <div className="mt-3 text-sm leading-7 text-[#65543e]">
-                Giá có thể thay đổi theo ngày khởi hành và dịch vụ đi kèm.
+                Điền thông tin để bộ phận tư vấn liên hệ xác nhận nhanh nhất.
               </div>
+
               <a
                 href="#booking-form"
                 className="mt-5 inline-flex rounded-2xl bg-[#8b5a22] px-5 py-3 text-sm font-bold uppercase tracking-[0.08em] text-white"
@@ -410,7 +401,6 @@ export default function TourDetailPage() {
               </a>
             </section>
 
-            {/* Tabs */}
             <section className="rounded-[28px] border border-[#eadfce] bg-white p-5 shadow-sm sm:p-6">
               <div className="flex flex-wrap gap-2 sm:gap-3">
                 <TabButton label="Tổng quan" value="tong-quan" activeTab={activeTab} onClick={setActiveTab} />
@@ -507,7 +497,6 @@ export default function TourDetailPage() {
               </div>
             </section>
 
-            {/* Why choose */}
             <SectionCard title="Vì sao nên chọn tour này?">
               <div className="space-y-3 text-[15px] leading-8 text-[#65543e]">
                 <p>• Lịch trình tối ưu và dễ đi với khách Việt.</p>
@@ -517,7 +506,6 @@ export default function TourDetailPage() {
               </div>
             </SectionCard>
 
-            {/* Related tours */}
             <SectionCard title="Tour liên quan">
               <div className="grid gap-4 md:grid-cols-3">
                 {relatedTours.map((item) => (
@@ -538,17 +526,16 @@ export default function TourDetailPage() {
             </SectionCard>
           </div>
 
-          {/* RIGHT */}
           <div className="hidden xl:block">
             <div id="booking-form" className="sticky top-6 rounded-[28px] border border-[#eadfce] bg-white p-6 shadow-sm">
               <div className="text-xs font-bold uppercase tracking-[0.12em] text-[#9b6a27]">
-                Giá từ
+                Đặt tour
               </div>
               <div className="mt-2 text-4xl font-black text-[#714b1f]">
                 {tour.price || 'Liên hệ'}
               </div>
               <div className="mt-3 text-sm leading-7 text-[#65543e]">
-                Giá có thể thay đổi theo ngày khởi hành và dịch vụ đi kèm. Liên hệ để nhận báo giá mới nhất.
+                Điền thông tin để bộ phận tư vấn liên hệ xác nhận nhanh nhất.
               </div>
 
               <form onSubmit={handleBookingSubmit} className="mt-6 grid gap-3">
@@ -626,7 +613,7 @@ export default function TourDetailPage() {
           </div>
         </div>
 
-        {/* Mobile / tablet booking form */}
+        {/* Mobile booking form */}
         <div id="booking-form" className="mt-6 xl:hidden">
           <div className="rounded-[28px] border border-[#eadfce] bg-white p-5 shadow-sm sm:p-6">
             <div className="text-xs font-bold uppercase tracking-[0.12em] text-[#9b6a27]">Đặt tour</div>
