@@ -442,21 +442,7 @@ export default function TourDetailPage() {
   <InlineInfoRow label="Tiêu chuẩn" value={tour.hotel || 'Liên hệ'} />
 </section>
 
-            {/* FIX: chỉ còn 1 block giá trên mobile, không trùng */}
-            <section className="xl:hidden rounded-[28px] border border-[#eadfce] bg-white p-5 shadow-sm sm:p-6">
-              <div className="text-xs font-bold uppercase tracking-[0.12em] text-[#9b6a27]">Đặt tour</div>
-              <div className="mt-2 text-3xl font-black text-[#714b1f]">{tour.price || 'Liên hệ'}</div>
-              <div className="mt-3 text-sm leading-7 text-[#65543e]">
-                Điền thông tin để bộ phận tư vấn liên hệ xác nhận nhanh nhất.
-              </div>
-
-              <a
-                href="#booking-form"
-                className="mt-5 inline-flex rounded-2xl bg-[#8b5a22] px-5 py-3 text-sm font-bold uppercase tracking-[0.08em] text-white"
-              >
-                Đặt tour ngay
-              </a>
-            </section>
+            
 
             <section className="rounded-[28px] border border-[#eadfce] bg-white p-5 shadow-sm sm:p-6">
               <div className="flex flex-wrap gap-2 sm:gap-3">
