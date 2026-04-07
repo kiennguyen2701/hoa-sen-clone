@@ -93,6 +93,25 @@ function InfoCard({ label, value }) {
     </div>
   );
 }
+function DepartureInfoCard({ label, values }) {
+  const safeValues = Array.isArray(values) ? values.filter(Boolean) : [];
+
+  return (
+    <div className="rounded-2xl border border-[#eadfce] bg-white p-4 shadow-sm">
+      <div className="text-[10px] font-bold uppercase tracking-[0.14em] text-[#a26d1a]">
+        {label}
+      </div>
+
+      <div className="mt-3 grid grid-cols-2 gap-x-4 gap-y-2 text-sm font-semibold leading-6 text-[#6a4721] sm:grid-cols-3 lg:grid-cols-4">
+        {safeValues.length > 0 ? (
+          safeValues.map((item, index) => <div key={index}>{item}</div>)
+        ) : (
+          <div>Liên hệ</div>
+        )}
+      </div>
+    </div>
+  );
+}
 
 function TabButton({ label, value, activeTab, onClick }) {
   const isActive = activeTab === value;
@@ -304,19 +323,19 @@ export default function TourDetailPage() {
           <span className="font-semibold text-[#8b5a22]">{tour.title}</span>
         </div>
 
-        <div className="mb-6 rounded-[28px] border border-[#eadfce] bg-white p-5 shadow-sm sm:p-7 lg:p-8">
-          <div className="inline-flex rounded-full bg-[#fcf4e8] px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-[#a26d1a]">
-            {tour.category || 'Du lịch quốc tế'}
-          </div>
+        <div className="mb-5 rounded-[24px] border border-[#eadfce] bg-white px-5 py-4 shadow-sm sm:px-6 sm:py-5 lg:mb-6 lg:px-7 lg:py-5">
+  <div className="inline-flex rounded-full bg-[#fcf4e8] px-3.5 py-1 text-[10px] font-bold uppercase tracking-[0.14em] text-[#a26d1a]">
+    {tour.category || 'Du lịch quốc tế'}
+  </div>
 
-          <h1 className="mt-4 text-[28px] font-black leading-tight text-[#714b1f] sm:text-[34px] lg:text-[40px]">
-            {tour.title}
-          </h1>
+  <h1 className="mt-3 text-[26px] font-black leading-[1.2] text-[#714b1f] sm:text-[32px] lg:text-[34px]">
+    {tour.title}
+  </h1>
 
-          <p className="mt-4 max-w-4xl text-[15px] leading-8 text-[#5f4a33] lg:text-base">
-            {tour.short_description || tour.shortDescription || tour.description}
-          </p>
-        </div>
+  <p className="mt-3 max-w-3xl text-[14px] leading-7 text-[#5f4a33] lg:text-[15px] lg:leading-7">
+    {tour.short_description || tour.shortDescription || tour.description}
+  </p>
+</div>
 
         <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
           <div className="space-y-6">
@@ -375,15 +394,26 @@ export default function TourDetailPage() {
             </section>
 
             {/* FIX: 4 ô theo hàng ngang trên mobile */}
-            <section className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              <InfoCard label="Thời lượng" value={tour.duration || 'Liên hệ'} />
-              <InfoCard
-                label="Khởi hành"
-                value={departureOptions.length ? departureOptions.join('\n') : tour.departure || 'Liên hệ'}
-              />
-              <InfoCard label="Phương tiện" value={tour.transport || 'Liên hệ'} />
-              <InfoCard label="Tiêu chuẩn" value={tour.hotel || 'Liên hệ'} />
-            </section>
+            <section className="grid grid-cols-1 gap-3 lg:grid-cols-12">
+  <div className="lg:col-span-2">
+    <InfoCard label="Thời lượng" value={tour.duration || 'Liên hệ'} />
+  </div>
+
+  <div className="lg:col-span-6">
+    <DepartureInfoCard
+      label="Khởi hành"
+      values={departureOptions.length ? departureOptions : [tour.departure || 'Liên hệ']}
+    />
+  </div>
+
+  <div className="lg:col-span-2">
+    <InfoCard label="Phương tiện" value={tour.transport || 'Liên hệ'} />
+  </div>
+
+  <div className="lg:col-span-2">
+    <InfoCard label="Tiêu chuẩn" value={tour.hotel || 'Liên hệ'} />
+  </div>
+</section>
 
             {/* FIX: chỉ còn 1 block giá trên mobile, không trùng */}
             <section className="xl:hidden rounded-[28px] border border-[#eadfce] bg-white p-5 shadow-sm sm:p-6">
