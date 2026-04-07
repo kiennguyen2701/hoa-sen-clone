@@ -79,7 +79,7 @@ export default function TourCard({ tour }) {
 
           <div>
             <div><div className="text-[10px] font-bold uppercase tracking-[0.16em] text-[#a26d1a]">
-                Giá chỉ từ
+                GIÁ CHỈ TỪ
               </div>
               <div className="mt-2 text-[16px] font-black text-[#6a4721]">
                 {tour.price || 'Liên hệ'}
