@@ -45,7 +45,7 @@ export default function SiteHeader() {
               VIP
             </div>
             <div className="min-w-0">
-              <div className="truncate text-[17px] font-black uppercase text-[#5c3d18]">
+              <div className="truncate text-[15px] font-black uppercase text-[#5c3d18]">
                 CÔNG TY CỔ PHẦN DU LỊCH MVIP
               </div>
             </div>
