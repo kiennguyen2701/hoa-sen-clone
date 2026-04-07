@@ -287,7 +287,7 @@ export default function TourAdminPanel() {
 
   return (
     <div className="grid gap-6">
-      <div className="rounded-[28px] border border-[#eadfce] bg-white p-5 shadow-sm md:p-6">
+      <div className="rounded-[24px] border border-[#eadfce] bg-white p-4 shadow-sm md:p-5">
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div>
             <div className="text-xs font-bold uppercase tracking-[0.14em] text-[#a26d1a]">
@@ -321,59 +321,59 @@ export default function TourAdminPanel() {
 
         {formOpen && (
           <form onSubmit={handleSubmit} className="mt-6 grid gap-4">
-            <div className="grid gap-4 md:grid-cols-2">
+            <div classname="grid gap-3 md:grid-cols-2">
               <input
                 value={form.title}
                 onChange={(e) => handleChange('title', e.target.value)}
                 placeholder="Tên tour"
-                className="rounded-2xl border border-[#dcc7a6] px-4 py-3"
+                className="rounded-2xl border border-[#dcc7a6] px-4 py-2.5 text-sm"
               />
               <input
                 value={form.slug}
                 onChange={(e) => handleChange('slug', e.target.value)}
                 placeholder="Slug"
-                className="rounded-2xl border border-[#dcc7a6] px-4 py-3"
+                className="rounded-2xl border border-[#dcc7a6] px-4 py-2.5 text-sm"
               />
             </div>
 
-            <div className="grid gap-4 md:grid-cols-4">
+            <div classname="grid gap-3 md:grid-cols-4">
               <input
                 value={form.category}
                 onChange={(e) => handleChange('category', e.target.value)}
                 placeholder="Danh mục"
-                className="rounded-2xl border border-[#dcc7a6] px-4 py-3"
+                className="rounded-2xl border border-[#dcc7a6] px-4 py-2.5 text-sm"
               />
               <input
                 value={form.duration}
                 onChange={(e) => handleChange('duration', e.target.value)}
                 placeholder="Thời lượng"
-                className="rounded-2xl border border-[#dcc7a6] px-4 py-3"
+                className="rounded-2xl border border-[#dcc7a6] px-4 py-2.5 text-sm"
               />
               <input
                 value={form.transport}
                 onChange={(e) => handleChange('transport', e.target.value)}
                 placeholder="Phương tiện"
-                className="rounded-2xl border border-[#dcc7a6] px-4 py-3"
+                className="rounded-2xl border border-[#dcc7a6] px-4 py-2.5 text-sm"
               />
               <input
                 value={form.hotel}
                 onChange={(e) => handleChange('hotel', e.target.value)}
                 placeholder="Tiêu chuẩn KS"
-                className="rounded-2xl border border-[#dcc7a6] px-4 py-3"
+                className="rounded-2xl border border-[#dcc7a6] px-4 py-2.5 text-sm"
               />
             </div>
 
-            <div className="grid gap-4 md:grid-cols-2">
+            <div classname="grid gap-3 md:grid-cols-2">
               <input
                 value={form.price}
                 onChange={(e) => handleChange('price', e.target.value)}
                 placeholder="Giá bán"
-                className="rounded-2xl border border-[#dcc7a6] px-4 py-3"
+                className="rounded-2xl border border-[#dcc7a6] px-4 py-2.5 text-sm"
               />
               <select
                 value={form.status}
                 onChange={(e) => handleChange('status', e.target.value)}
-                className="rounded-2xl border border-[#dcc7a6] px-4 py-3"
+                className="rounded-2xl border border-[#dcc7a6] px-4 py-2.5 text-sm"
               >
                 <option value="active">active</option>
                 <option value="inactive">inactive</option>
@@ -392,19 +392,19 @@ export default function TourAdminPanel() {
                 Ảnh tour
               </div>
 
-              <div className="grid gap-4 lg:grid-cols-[1.4fr_1fr]">
+              <div classname="grid gap-3 lg:grid-cols-[1.4fr_1fr]">
                 <input
                   value={form.image}
                   onChange={(e) => handleChange('image', e.target.value)}
                   placeholder="Ảnh đại diện"
-                  className="rounded-2xl border border-[#dcc7a6] px-4 py-3"
+                  className="rounded-2xl border border-[#dcc7a6] px-4 py-2.5 text-sm"
                 />
 
                 <input
                   value={form.video_url}
                   onChange={(e) => handleChange('video_url', e.target.value)}
                   placeholder="Video URL"
-                  className="rounded-2xl border border-[#dcc7a6] px-4 py-3"
+                  className="rounded-2xl border border-[#dcc7a6] px-4 py-2.5 text-sm"
                 />
               </div>
 
@@ -421,26 +421,26 @@ export default function TourAdminPanel() {
                 Nhà cung cấp & Hoa hồng
               </div>
 
-              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+              <div classname="grid gap-3 md:grid-cols-2 lg:grid-cols-5">
                 <input
                   value={form.supplier_name}
                   onChange={(e) => handleChange('supplier_name', e.target.value)}
                   placeholder="Nhà cung cấp"
-                  className="rounded-2xl border border-[#dcc7a6] px-4 py-3"
+                  className="rounded-2xl border border-[#dcc7a6] px-4 py-2.5 text-sm"
                 />
 
                 <input
                   value={form.supplier_code}
                   onChange={(e) => handleChange('supplier_code', e.target.value)}
                   placeholder="Mã nhà cung cấp"
-                  className="rounded-2xl border border-[#dcc7a6] px-4 py-3"
+                  className="rounded-2xl border border-[#dcc7a6] px-4 py-2.5 text-sm"
                 />
 
                 <input
                   value={form.commission_total}
                   onChange={(e) => handleChange('commission_total', e.target.value)}
                   placeholder="Hoa hồng tổng"
-                  className="rounded-2xl border border-[#dcc7a6] px-4 py-3"
+                  className="rounded-2xl border border-[#dcc7a6] px-4 py-2.5 text-sm"
                 />
 
                 <input
@@ -459,7 +459,7 @@ export default function TourAdminPanel() {
               </div>
             </div>
 
-            <div className="grid gap-4 md:grid-cols-2">
+            <div classname="grid gap-3 md:grid-cols-2">
               <textarea
                 value={form.short_description}
                 onChange={(e) => handleChange('short_description', e.target.value)}
@@ -475,7 +475,7 @@ export default function TourAdminPanel() {
               />
             </div>
 
-            <div className="grid gap-4 md:grid-cols-2">
+            <div classname="grid gap-3 md:grid-cols-2">
               <textarea
                 value={form.highlights}
                 onChange={(e) => handleChange('highlights', e.target.value)}
@@ -550,7 +550,7 @@ export default function TourAdminPanel() {
               </div>
             </div>
 
-            <div className="grid gap-4 md:grid-cols-3">
+            <div classname="grid gap-3 md:grid-cols-3">
               <textarea
                 value={form.included}
                 onChange={(e) => handleChange('included', e.target.value)}
