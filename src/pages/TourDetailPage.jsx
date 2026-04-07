@@ -112,6 +112,15 @@ function TabButton({ label, value, activeTab, onClick }) {
   );
 }
 
+function SectionCard({ title, children }) {
+  return (
+    <section className="rounded-[28px] border border-[#eadfce] bg-white p-5 shadow-sm sm:p-6">
+      <h2 className="text-2xl font-black text-[#714b1f]">{title}</h2>
+      <div className="mt-5">{children}</div>
+    </section>
+  );
+}
+
 export default function TourDetailPage() {
   const { slug } = useParams();
 
@@ -142,7 +151,6 @@ export default function TourDetailPage() {
     async function load() {
       try {
         setLoading(true);
-
         const current = await getTourBySlug(slug);
         setTour(current);
 
@@ -260,7 +268,7 @@ export default function TourDetailPage() {
 
   if (loading) {
     return (
-      <div className="mx-auto max-w-[1240px] px-4 py-16">
+      <div className="mx-auto max-w-[1240px] px-4 py-10 sm:py-14">
         <div className="rounded-3xl border border-[#eadfce] bg-white p-8 text-[#6b5840] shadow-sm">
           Đang tải chi tiết tour...
         </div>
@@ -270,12 +278,10 @@ export default function TourDetailPage() {
 
   if (!tour) {
     return (
-      <div className="mx-auto max-w-[1240px] px-4 py-16">
-        <div className="rounded-3xl border border-[#eadfce] bg-white p-10 shadow-sm">
+      <div className="mx-auto max-w-[1240px] px-4 py-10 sm:py-14">
+        <div className="rounded-3xl border border-[#eadfce] bg-white p-8 shadow-sm sm:p-10">
           <h1 className="text-3xl font-black text-[#714b1f]">Không tìm thấy tour</h1>
-          <p className="mt-4 text-[#5f4a33]">
-            Tour anh đang tìm hiện chưa có trong dữ liệu.
-          </p>
+          <p className="mt-4 text-[#5f4a33]">Tour anh đang tìm hiện chưa có trong dữ liệu.</p>
           <Link
             to="/du-lich-quoc-te"
             className="mt-6 inline-block rounded-xl bg-[#8b5a22] px-5 py-3 text-sm font-bold uppercase tracking-[0.08em] text-white"
@@ -289,9 +295,9 @@ export default function TourDetailPage() {
 
   return (
     <div className="bg-[#f7f1e6]">
-      <div className="mx-auto max-w-[1240px] px-4 py-6 lg:py-8">
+      <div className="mx-auto max-w-[1240px] px-4 py-5 sm:py-6 lg:py-8">
         {/* Breadcrumb */}
-        <div className="mb-5 text-xs leading-6 text-[#7a5a34] sm:text-sm">
+        <div className="mb-4 text-xs leading-6 text-[#7a5a34] sm:mb-5 sm:text-sm">
           <Link to="/" className="hover:text-[#8b5a22]">
             Trang chủ
           </Link>
@@ -303,8 +309,8 @@ export default function TourDetailPage() {
           <span className="font-semibold text-[#8b5a22]">{tour.title}</span>
         </div>
 
-        {/* Header content riêng */}
-        <div className="mb-6 rounded-[28px] border border-[#eadfce] bg-white p-6 shadow-sm sm:p-8">
+        {/* Header tour */}
+        <div className="mb-6 rounded-[28px] border border-[#eadfce] bg-white p-5 shadow-sm sm:p-7 lg:p-8">
           <div className="inline-flex rounded-full bg-[#fcf4e8] px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.14em] text-[#a26d1a]">
             {tour.category || 'Du lịch quốc tế'}
           </div>
@@ -319,7 +325,7 @@ export default function TourDetailPage() {
         </div>
 
         <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
-          {/* Cột trái */}
+          {/* LEFT */}
           <div className="space-y-6">
             {/* Gallery */}
             <section className="rounded-[28px] border border-[#eadfce] bg-white p-4 shadow-sm sm:p-5">
@@ -328,7 +334,7 @@ export default function TourDetailPage() {
                   <iframe
                     src={getEmbedUrl(mainMedia.url)}
                     title={tour.title}
-                    className="h-[280px] w-full sm:h-[380px] lg:h-[520px]"
+                    className="h-[240px] w-full sm:h-[360px] lg:h-[520px]"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     allowFullScreen
                   />
@@ -336,13 +342,13 @@ export default function TourDetailPage() {
                   <img
                     src={mainMedia?.url || tour.image}
                     alt={tour.title}
-                    className="h-[280px] w-full object-cover sm:h-[380px] lg:h-[520px]"
+                    className="h-[240px] w-full object-cover sm:h-[360px] lg:h-[520px]"
                   />
                 )}
               </div>
 
               {mediaItems.length > 0 && (
-                <div className="mt-4 grid grid-cols-4 gap-3 sm:grid-cols-5">
+                <div className="mt-4 grid grid-cols-4 gap-2 sm:grid-cols-5 sm:gap-3">
                   {mediaItems.map((item, index) => {
                     const isActive = mainMedia?.type === item.type && mainMedia?.url === item.url;
 
@@ -360,11 +366,11 @@ export default function TourDetailPage() {
                         <img
                           src={item.thumb}
                           alt={`${tour.title}-${index + 1}`}
-                          className="h-20 w-full object-cover sm:h-24"
+                          className="h-16 w-full object-cover sm:h-24"
                         />
                         {item.type === 'video' && (
                           <div className="absolute inset-0 flex items-center justify-center bg-black/35">
-                            <span className="rounded-full bg-white/90 px-3 py-1 text-[11px] font-bold text-[#8b5a22]">
+                            <span className="rounded-full bg-white/90 px-2.5 py-1 text-[11px] font-bold text-[#8b5a22]">
                               Video
                             </span>
                           </div>
@@ -376,20 +382,35 @@ export default function TourDetailPage() {
               )}
             </section>
 
-            {/* Quick info */}
+            {/* Info cards */}
             <section className="grid grid-cols-2 gap-3 lg:grid-cols-4">
               <InfoCard label="Thời lượng" value={tour.duration || 'Liên hệ'} />
               <InfoCard
                 label="Khởi hành"
-                value={
-                  departureOptions.length ? departureOptions.join('\n') : tour.departure || 'Liên hệ'
-                }
+                value={departureOptions.length ? departureOptions.join('\n') : tour.departure || 'Liên hệ'}
               />
               <InfoCard label="Phương tiện" value={tour.transport || 'Liên hệ'} />
               <InfoCard label="Tiêu chuẩn" value={tour.hotel || 'Liên hệ'} />
             </section>
 
-            {/* Tabs content */}
+            {/* Mobile booking quick card */}
+            <section className="xl:hidden rounded-[28px] border border-[#eadfce] bg-white p-5 shadow-sm">
+              <div className="text-xs font-bold uppercase tracking-[0.12em] text-[#9b6a27]">
+                Giá từ
+              </div>
+              <div className="mt-2 text-3xl font-black text-[#714b1f]">{tour.price || 'Liên hệ'}</div>
+              <div className="mt-3 text-sm leading-7 text-[#65543e]">
+                Giá có thể thay đổi theo ngày khởi hành và dịch vụ đi kèm.
+              </div>
+              <a
+                href="#booking-form"
+                className="mt-5 inline-flex rounded-2xl bg-[#8b5a22] px-5 py-3 text-sm font-bold uppercase tracking-[0.08em] text-white"
+              >
+                Đặt tour ngay
+              </a>
+            </section>
+
+            {/* Tabs */}
             <section className="rounded-[28px] border border-[#eadfce] bg-white p-5 shadow-sm sm:p-6">
               <div className="flex flex-wrap gap-2 sm:gap-3">
                 <TabButton label="Tổng quan" value="tong-quan" activeTab={activeTab} onClick={setActiveTab} />
@@ -430,9 +451,9 @@ export default function TourDetailPage() {
                 {activeTab === 'lich-trinh' && (
                   <div className="space-y-5">
                     {(tour.itinerary || []).map((item, index) => (
-                      <div key={`${item.day}-${item.title}`} className="flex gap-4">
+                      <div key={`${item.day}-${item.title}`} className="flex gap-3 sm:gap-4">
                         <div className="flex flex-col items-center">
-                          <div className="flex h-11 w-11 items-center justify-center rounded-full bg-[#8b5a22] text-sm font-black text-white">
+                          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#8b5a22] text-sm font-black text-white sm:h-11 sm:w-11">
                             {index + 1}
                           </div>
                           {index !== (tour.itinerary || []).length - 1 && (
@@ -440,11 +461,11 @@ export default function TourDetailPage() {
                           )}
                         </div>
 
-                        <div className="flex-1 rounded-2xl border border-[#eadfce] bg-[#fcfaf5] p-5">
+                        <div className="flex-1 rounded-2xl border border-[#eadfce] bg-[#fcfaf5] p-4 sm:p-5">
                           <div className="text-xs font-bold uppercase tracking-[0.15em] text-[#a26d1a]">
                             {item.day}
                           </div>
-                          <div className="mt-2 text-lg font-bold text-[#6f4817]">
+                          <div className="mt-2 text-base font-bold text-[#6f4817] sm:text-lg">
                             {item.title}
                           </div>
                           <p className="mt-3 text-[15px] leading-8 text-[#5f4a33]">
@@ -458,23 +479,21 @@ export default function TourDetailPage() {
 
                 {activeTab === 'bao-gom' && (
                   <div className="grid gap-6 lg:grid-cols-2">
-                    <div className="rounded-2xl border border-[#eadfce] bg-[#fcfaf5] p-5">
-                      <h3 className="text-xl font-black text-[#714b1f]">Giá tour bao gồm</h3>
-                      <ul className="mt-4 space-y-3 text-[15px] leading-8 text-[#5f4a33]">
+                    <SectionCard title="Giá tour bao gồm">
+                      <ul className="space-y-3 text-[15px] leading-8 text-[#5f4a33]">
                         {(tour.included || []).map((item) => (
                           <li key={item}>• {item}</li>
                         ))}
                       </ul>
-                    </div>
+                    </SectionCard>
 
-                    <div className="rounded-2xl border border-[#eadfce] bg-[#fcfaf5] p-5">
-                      <h3 className="text-xl font-black text-[#714b1f]">Không bao gồm</h3>
-                      <ul className="mt-4 space-y-3 text-[15px] leading-8 text-[#5f4a33]">
+                    <SectionCard title="Không bao gồm">
+                      <ul className="space-y-3 text-[15px] leading-8 text-[#5f4a33]">
                         {(tour.excluded || []).map((item) => (
                           <li key={item}>• {item}</li>
                         ))}
                       </ul>
-                    </div>
+                    </SectionCard>
                   </div>
                 )}
 
@@ -488,10 +507,19 @@ export default function TourDetailPage() {
               </div>
             </section>
 
+            {/* Why choose */}
+            <SectionCard title="Vì sao nên chọn tour này?">
+              <div className="space-y-3 text-[15px] leading-8 text-[#65543e]">
+                <p>• Lịch trình tối ưu và dễ đi với khách Việt.</p>
+                <p>• Tư vấn rõ ràng trước, trong và sau chuyến đi.</p>
+                <p>• Hỗ trợ thông tin visa, hành lý và các lưu ý quan trọng.</p>
+                <p>• Phù hợp khách đoàn, gia đình hoặc nhóm riêng.</p>
+              </div>
+            </SectionCard>
+
             {/* Related tours */}
-            <section className="rounded-[28px] border border-[#eadfce] bg-white p-5 shadow-sm sm:p-6">
-              <h2 className="text-2xl font-black text-[#714b1f]">Tour liên quan</h2>
-              <div className="mt-5 grid gap-4 md:grid-cols-3">
+            <SectionCard title="Tour liên quan">
+              <div className="grid gap-4 md:grid-cols-3">
                 {relatedTours.map((item) => (
                   <Link
                     key={item.slug}
@@ -507,109 +535,169 @@ export default function TourDetailPage() {
                   </Link>
                 ))}
               </div>
-            </section>
+            </SectionCard>
           </div>
 
-          {/* Cột phải */}
-          <div className="space-y-6">
-            <div className="xl:sticky xl:top-6">
-              <div className="rounded-[28px] border border-[#eadfce] bg-white p-5 shadow-sm sm:p-6">
+          {/* RIGHT */}
+          <div className="hidden xl:block">
+            <div id="booking-form" className="sticky top-6 rounded-[28px] border border-[#eadfce] bg-white p-6 shadow-sm">
+              <div className="text-xs font-bold uppercase tracking-[0.12em] text-[#9b6a27]">
+                Giá từ
+              </div>
+              <div className="mt-2 text-4xl font-black text-[#714b1f]">
+                {tour.price || 'Liên hệ'}
+              </div>
+              <div className="mt-3 text-sm leading-7 text-[#65543e]">
+                Giá có thể thay đổi theo ngày khởi hành và dịch vụ đi kèm. Liên hệ để nhận báo giá mới nhất.
+              </div>
+
+              <form onSubmit={handleBookingSubmit} className="mt-6 grid gap-3">
+                <input
+                  value={bookingForm.customerName}
+                  onChange={(e) => setBookingForm({ ...bookingForm, customerName: e.target.value })}
+                  className="rounded-2xl border border-[#dcc7a6] px-4 py-3 text-sm outline-none"
+                  placeholder="Họ và tên"
+                />
+
+                <input
+                  value={bookingForm.phone}
+                  onChange={(e) => setBookingForm({ ...bookingForm, phone: e.target.value })}
+                  className="rounded-2xl border border-[#dcc7a6] px-4 py-3 text-sm outline-none"
+                  placeholder="Số điện thoại"
+                />
+
+                <input
+                  type="email"
+                  value={bookingForm.email}
+                  onChange={(e) => setBookingForm({ ...bookingForm, email: e.target.value })}
+                  className="rounded-2xl border border-[#dcc7a6] px-4 py-3 text-sm outline-none"
+                  placeholder="Email"
+                />
+
+                <select
+                  value={bookingForm.departureDate}
+                  onChange={(e) => setBookingForm((prev) => ({ ...prev, departureDate: e.target.value }))}
+                  className="w-full rounded-2xl border border-[#dcc7a6] px-4 py-3 text-sm"
+                >
+                  <option value="">Chọn ngày khởi hành</option>
+                  {departureOptions.map((date, index) => (
+                    <option key={index} value={date}>
+                      {date}
+                    </option>
+                  ))}
+                </select>
+
+                <select
+                  value={bookingForm.guestCount}
+                  onChange={(e) => setBookingForm({ ...bookingForm, guestCount: e.target.value })}
+                  className="rounded-2xl border border-[#dcc7a6] px-4 py-3 text-sm text-[#6b5840] outline-none"
+                >
+                  <option value="">Số lượng khách</option>
+                  <option value="1 khách">1 khách</option>
+                  <option value="2 khách">2 khách</option>
+                  <option value="3-5 khách">3-5 khách</option>
+                  <option value="Đoàn riêng">Đoàn riêng</option>
+                </select>
+
+                <textarea
+                  value={bookingForm.note}
+                  onChange={(e) => setBookingForm({ ...bookingForm, note: e.target.value })}
+                  className="min-h-[110px] rounded-2xl border border-[#dcc7a6] px-4 py-3 text-sm outline-none"
+                  placeholder="Nội dung cần tư vấn"
+                />
+
+                <button
+                  type="submit"
+                  disabled={sending}
+                  className="rounded-2xl bg-[#8b5a22] px-5 py-3.5 text-sm font-bold uppercase tracking-[0.08em] text-white transition hover:opacity-95"
+                >
+                  {sending ? 'Đang gửi...' : 'Đặt tour ngay'}
+                </button>
+              </form>
+
+              <div className="mt-6 rounded-2xl bg-[#fcfaf5] p-4">
                 <div className="text-xs font-bold uppercase tracking-[0.12em] text-[#9b6a27]">
-                  Giá từ
+                  Hotline tư vấn
                 </div>
-                <div className="mt-2 text-4xl font-black text-[#714b1f]">
-                  {tour.price || 'Liên hệ'}
-                </div>
-                <div className="mt-3 text-sm leading-7 text-[#65543e]">
-                  Giá có thể thay đổi theo ngày khởi hành và dịch vụ đi kèm. Liên hệ để
-                  nhận báo giá mới nhất.
-                </div>
-
-                <form onSubmit={handleBookingSubmit} className="mt-6 grid gap-3">
-                  <input
-                    value={bookingForm.customerName}
-                    onChange={(e) =>
-                      setBookingForm({ ...bookingForm, customerName: e.target.value })
-                    }
-                    className="rounded-2xl border border-[#dcc7a6] px-4 py-3 text-sm outline-none"
-                    placeholder="Họ và tên"
-                  />
-
-                  <input
-                    value={bookingForm.phone}
-                    onChange={(e) =>
-                      setBookingForm({ ...bookingForm, phone: e.target.value })
-                    }
-                    className="rounded-2xl border border-[#dcc7a6] px-4 py-3 text-sm outline-none"
-                    placeholder="Số điện thoại"
-                  />
-
-                  <input
-                    type="email"
-                    value={bookingForm.email}
-                    onChange={(e) =>
-                      setBookingForm({ ...bookingForm, email: e.target.value })
-                    }
-                    className="rounded-2xl border border-[#dcc7a6] px-4 py-3 text-sm outline-none"
-                    placeholder="Email"
-                  />
-
-                  <select
-                    value={bookingForm.departureDate}
-                    onChange={(e) =>
-                      setBookingForm((prev) => ({ ...prev, departureDate: e.target.value }))
-                    }
-                    className="w-full rounded-2xl border border-[#dcc7a6] px-4 py-3 text-sm"
-                  >
-                    <option value="">Chọn ngày khởi hành</option>
-                    {departureOptions.map((date, index) => (
-                      <option key={index} value={date}>
-                        {date}
-                      </option>
-                    ))}
-                  </select>
-
-                  <select
-                    value={bookingForm.guestCount}
-                    onChange={(e) =>
-                      setBookingForm({ ...bookingForm, guestCount: e.target.value })
-                    }
-                    className="rounded-2xl border border-[#dcc7a6] px-4 py-3 text-sm text-[#6b5840] outline-none"
-                  >
-                    <option value="">Số lượng khách</option>
-                    <option value="1 khách">1 khách</option>
-                    <option value="2 khách">2 khách</option>
-                    <option value="3-5 khách">3-5 khách</option>
-                    <option value="Đoàn riêng">Đoàn riêng</option>
-                  </select>
-
-                  <textarea
-                    value={bookingForm.note}
-                    onChange={(e) => setBookingForm({ ...bookingForm, note: e.target.value })}
-                    className="min-h-[110px] rounded-2xl border border-[#dcc7a6] px-4 py-3 text-sm outline-none"
-                    placeholder="Nội dung cần tư vấn"
-                  />
-
-                  <button
-                    type="submit"
-                    disabled={sending}
-                    className="rounded-2xl bg-[#8b5a22] px-5 py-3.5 text-sm font-bold uppercase tracking-[0.08em] text-white transition hover:opacity-95"
-                  >
-                    {sending ? 'Đang gửi...' : 'Đặt tour ngay'}
-                  </button>
-                </form>
-
-                <div className="mt-6 rounded-2xl bg-[#fcfaf5] p-4">
-                  <div className="text-xs font-bold uppercase tracking-[0.12em] text-[#9b6a27]">
-                    Hotline tư vấn
-                  </div>
-                  <div className="mt-2 text-3xl font-black text-[#744815]">0965 692 959</div>
-                  <div className="mt-1 text-sm text-[#65543e]">
-                    Hỗ trợ 08:00 - 17:30 mỗi ngày
-                  </div>
-                </div>
+                <div className="mt-2 text-3xl font-black text-[#744815]">0965 692 959</div>
+                <div className="mt-1 text-sm text-[#65543e]">Hỗ trợ 08:00 - 17:30 mỗi ngày</div>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Mobile / tablet booking form */}
+        <div id="booking-form" className="mt-6 xl:hidden">
+          <div className="rounded-[28px] border border-[#eadfce] bg-white p-5 shadow-sm sm:p-6">
+            <div className="text-xs font-bold uppercase tracking-[0.12em] text-[#9b6a27]">Đặt tour</div>
+            <div className="mt-2 text-3xl font-black text-[#714b1f]">{tour.price || 'Liên hệ'}</div>
+            <div className="mt-3 text-sm leading-7 text-[#65543e]">
+              Điền thông tin để bộ phận tư vấn liên hệ xác nhận nhanh nhất.
+            </div>
+
+            <form onSubmit={handleBookingSubmit} className="mt-6 grid gap-3">
+              <input
+                value={bookingForm.customerName}
+                onChange={(e) => setBookingForm({ ...bookingForm, customerName: e.target.value })}
+                className="rounded-2xl border border-[#dcc7a6] px-4 py-3 text-sm outline-none"
+                placeholder="Họ và tên"
+              />
+
+              <input
+                value={bookingForm.phone}
+                onChange={(e) => setBookingForm({ ...bookingForm, phone: e.target.value })}
+                className="rounded-2xl border border-[#dcc7a6] px-4 py-3 text-sm outline-none"
+                placeholder="Số điện thoại"
+              />
+
+              <input
+                type="email"
+                value={bookingForm.email}
+                onChange={(e) => setBookingForm({ ...bookingForm, email: e.target.value })}
+                className="rounded-2xl border border-[#dcc7a6] px-4 py-3 text-sm outline-none"
+                placeholder="Email"
+              />
+
+              <select
+                value={bookingForm.departureDate}
+                onChange={(e) => setBookingForm((prev) => ({ ...prev, departureDate: e.target.value }))}
+                className="w-full rounded-2xl border border-[#dcc7a6] px-4 py-3 text-sm"
+              >
+                <option value="">Chọn ngày khởi hành</option>
+                {departureOptions.map((date, index) => (
+                  <option key={index} value={date}>
+                    {date}
+                  </option>
+                ))}
+              </select>
+
+              <select
+                value={bookingForm.guestCount}
+                onChange={(e) => setBookingForm({ ...bookingForm, guestCount: e.target.value })}
+                className="rounded-2xl border border-[#dcc7a6] px-4 py-3 text-sm text-[#6b5840] outline-none"
+              >
+                <option value="">Số lượng khách</option>
+                <option value="1 khách">1 khách</option>
+                <option value="2 khách">2 khách</option>
+                <option value="3-5 khách">3-5 khách</option>
+                <option value="Đoàn riêng">Đoàn riêng</option>
+              </select>
+
+              <textarea
+                value={bookingForm.note}
+                onChange={(e) => setBookingForm({ ...bookingForm, note: e.target.value })}
+                className="min-h-[110px] rounded-2xl border border-[#dcc7a6] px-4 py-3 text-sm outline-none"
+                placeholder="Nội dung cần tư vấn"
+              />
+
+              <button
+                type="submit"
+                disabled={sending}
+                className="rounded-2xl bg-[#8b5a22] px-5 py-3.5 text-sm font-bold uppercase tracking-[0.08em] text-white transition hover:opacity-95"
+              >
+                {sending ? 'Đang gửi...' : 'Đặt tour ngay'}
+              </button>
+            </form>
           </div>
         </div>
       </div>

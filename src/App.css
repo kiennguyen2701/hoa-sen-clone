@@ -257,3 +257,10 @@
     grid-template-columns: 1fr;
   }
 }
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #f7f1e6;
+}
