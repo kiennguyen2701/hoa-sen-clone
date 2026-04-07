@@ -8,7 +8,6 @@ export default function HeroSlider({ mobile = false }) {
 
   const [current, setCurrent] = useState(0);
   const [keyword, setKeyword] = useState('');
-  const [destination, setDestination] = useState('');
   const [month, setMonth] = useState('');
   const [tourType, setTourType] = useState('');
 
@@ -46,7 +45,6 @@ export default function HeroSlider({ mobile = false }) {
     const params = new URLSearchParams();
 
     if (keyword.trim()) params.set('q', keyword.trim());
-    if (destination) params.set('destination', destination);
     if (month) params.set('month', month);
     if (tourType) params.set('type', tourType);
 
@@ -72,69 +70,44 @@ export default function HeroSlider({ mobile = false }) {
               className="h-full w-full object-cover"
             />
 
-            <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(25,16,8,0.78)_0%,rgba(25,16,8,0.48)_38%,rgba(25,16,8,0.14)_100%)]" />
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(25,16,8,0.20)_0%,rgba(25,16,8,0.12)_35%,rgba(25,16,8,0.38)_100%)]" />
 
-            <div className="absolute inset-0 flex items-center">
+            <div className="absolute inset-0">
               <div
                 className={
                   mobile
-                    ? 'max-w-[92%] px-4 py-4 text-white'
-                    : 'max-w-[760px] px-6 py-8 text-white md:px-10 lg:px-14'
+                    ? 'absolute left-1/2 top-4 -translate-x-1/2'
+                    : 'absolute left-1/2 top-7 -translate-x-1/2'
                 }
               >
                 <div
                   className={
                     mobile
-                      ? 'inline-flex rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-white/90 backdrop-blur-sm'
-                      : 'inline-flex rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-white/90 backdrop-blur-sm'
+                      ? 'inline-flex whitespace-nowrap rounded-full border border-white/20 bg-black/20 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-white/95 backdrop-blur-sm'
+                      : 'inline-flex whitespace-nowrap rounded-full border border-white/20 bg-black/20 px-5 py-2 text-xs font-bold uppercase tracking-[0.2em] text-white/95 backdrop-blur-sm'
                   }
                 >
                   {activeSlide.badge}
                 </div>
+              </div>
 
-                <h1
+              <div
+                className={
+                  mobile
+                    ? 'absolute bottom-14 right-4'
+                    : 'absolute bottom-10 right-10'
+                }
+              >
+                <Link
+                  to={activeSlide.buttonLink || '/du-lich-quoc-te'}
                   className={
                     mobile
-                      ? 'mt-2 max-w-[95%] text-[26px] font-black leading-[1.1]'
-                      : 'mt-5 max-w-[700px] text-4xl font-black leading-tight md:text-6xl'
+                      ? 'inline-flex items-center rounded-2xl bg-[#8b5a22] px-4 py-2.5 text-[11px] font-bold uppercase tracking-[0.06em] text-white transition hover:bg-[#744815]'
+                      : 'inline-flex items-center rounded-2xl bg-[#8b5a22] px-7 py-3.5 text-sm font-bold uppercase tracking-[0.08em] text-white transition hover:bg-[#744815]'
                   }
                 >
-                  {activeSlide.title}
-                </h1>
-
-                <p
-                  className={
-                    mobile
-                      ? 'mt-2 max-w-[95%] text-[11px] leading-5 text-white/90'
-                      : 'mt-5 max-w-[620px] text-sm leading-7 text-white/90 md:text-lg md:leading-8'
-                  }
-                >
-                  {activeSlide.subtitle}
-                </p>
-
-                <div className={mobile ? 'mt-4 flex flex-wrap gap-2' : 'mt-7 flex flex-wrap gap-3'}>
-                  <Link
-                    to={activeSlide.buttonLink || '/du-lich-quoc-te'}
-                    className={
-                      mobile
-                        ? 'inline-flex items-center rounded-2xl bg-[#8b5a22] px-3 py-2 text-[11px] font-bold uppercase tracking-[0.06em] text-white transition hover:bg-[#744815]'
-                        : 'inline-flex items-center rounded-2xl bg-[#8b5a22] px-6 py-3 text-sm font-bold uppercase tracking-[0.08em] text-white transition hover:bg-[#744815]'
-                    }
-                  >
-                    {activeSlide.buttonText || 'Xem ngay'}
-                  </Link>
-
-                  <Link
-                    to="/lien-he"
-                    className={
-                      mobile
-                        ? 'inline-flex items-center rounded-2xl border border-white/30 bg-white/10 px-4 py-2.5 text-xs font-bold uppercase tracking-[0.06em] text-white backdrop-blur-sm transition hover:bg-white/20'
-                        : 'inline-flex items-center rounded-2xl border border-white/30 bg-white/10 px-6 py-3 text-sm font-bold uppercase tracking-[0.08em] text-white backdrop-blur-sm transition hover:bg-white/20'
-                    }
-                  >
-                    Tư vấn ngay
-                  </Link>
-                </div>
+                  {activeSlide.buttonText || 'Chi tiết'}
+                </Link>
               </div>
             </div>
 
@@ -177,8 +150,8 @@ export default function HeroSlider({ mobile = false }) {
                         ? 'h-2.5 w-8 bg-[#8b5a22]'
                         : 'h-3 w-10 bg-[#8b5a22]'
                       : mobile
-                      ? 'h-2.5 w-2.5 bg-[#d7c2a0]'
-                      : 'h-3 w-3 bg-[#d7c2a0]'
+                        ? 'h-2.5 w-2.5 bg-[#d7c2a0]'
+                        : 'h-3 w-3 bg-[#d7c2a0]'
                   }`}
                 />
               ))}
@@ -199,7 +172,7 @@ export default function HeroSlider({ mobile = false }) {
               className={
                 mobile
                   ? 'grid gap-3'
-                  : 'grid gap-4 lg:grid-cols-[1.25fr_1fr_1fr_1fr_auto]'
+                  : 'grid gap-4 lg:grid-cols-[1.25fr_1fr_1fr_auto]'
               }
             >
               <div>
@@ -213,8 +186,6 @@ export default function HeroSlider({ mobile = false }) {
                   placeholder="Nhập tên tour, điểm đến..."
                 />
               </div>
-
-              
 
               <div>
                 <label className="mb-1.5 block text-xs font-bold uppercase tracking-[0.12em] text-[#9b6a27]">
