@@ -616,91 +616,106 @@ export default function TourAdminPanel() {
         {loading ? (
           <div className="text-[#6b5840]">Đang tải...</div>
         ) : (
-          <div className="overflow-x-auto rounded-2xl border border-[#eadfce]">
-            <table className="min-w-[1200px] w-full border-collapse">
-              <thead className="bg-[#fcfaf5]">
-                <tr className="text-left text-sm text-[#8b5a22]">
-                  <th className="px-4 py-3 font-bold">Tên tour</th>
-                  <th className="px-4 py-3 font-bold">Danh mục</th>
-                  <th className="px-4 py-3 font-bold">Giá</th>
-                  <th className="px-4 py-3 font-bold">NCC</th>
-                  <th className="px-4 py-3 font-bold">HH tổng</th>
-                  <th className="px-4 py-3 font-bold">CTV</th>
-                  <th className="px-4 py-3 font-bold">Mvip</th>
-                  <th className="px-4 py-3 font-bold">Trạng thái</th>
-                  <th className="px-4 py-3 font-bold">Thao tác</th>
-                </tr>
-              </thead>
+          <div className="overflow-hidden rounded-2xl border border-[#eadfce]">
+  <table className="w-full border-collapse table-fixed">
+    <thead className="bg-[#fcfaf5]">
+      <tr className="text-left text-sm text-[#8b5a22]">
+        <th className="w-[34%] px-4 py-3 font-bold">Tên tour</th>
+        <th className="w-[12%] px-3 py-3 font-bold">Danh mục</th>
+        <th className="w-[10%] px-3 py-3 font-bold">Giá</th>
+        <th className="w-[18%] px-3 py-3 font-bold">NCC / Hoa hồng</th>
+        <th className="w-[10%] px-3 py-3 font-bold">Trạng thái</th>
+        <th className="w-[16%] px-3 py-3 font-bold text-right">Thao tác</th>
+      </tr>
+    </thead>
 
-              <tbody>
-                {filteredTours.map((tour) => {
-                  const active = editingId === tour.id;
+    <tbody>
+      {filteredTours.map((tour) => {
+        const active = editingId === tour.id;
 
-                  return (
-                    <tr
-                      key={tour.id}
-                      className={`border-t border-[#f0e5d4] ${
-                        active ? 'bg-[#fff9f0]' : 'bg-white'
-                      }`}
-                    >
-                      <td className="px-4 py-3 align-top">
-                        <div className="max-w-[320px]">
-                          <div className="font-black text-[#5f3b16]">{tour.title}</div>
-                          <div className="mt-1 text-xs text-[#7a6853]">{tour.slug}</div>
-                        </div>
-                      </td>
+        return (
+          <tr
+            key={tour.id}
+            className={`border-t border-[#f0e5d4] ${
+              active ? 'bg-[#fff9f0]' : 'bg-white'
+            }`}
+          >
+            <td className="px-4 py-3 align-top">
+              <div className="min-w-0">
+                <div className="line-clamp-2 font-black leading-6 text-[#5f3b16]">
+                  {tour.title}
+                </div>
+                <div className="mt-1 truncate text-xs text-[#7a6853]">
+                  {tour.slug}
+                </div>
+              </div>
+            </td>
 
-                      <td className="px-4 py-3 text-sm text-[#6b5840]">{tour.category || '-'}</td>
-                      <td className="px-4 py-3 text-sm text-[#6b5840]">{tour.price || '-'}</td>
-                      <td className="px-4 py-3 text-sm text-[#6b5840]">{tour.supplier_name || '-'}</td>
-                      <td className="px-4 py-3 text-sm text-[#6b5840]">
-                        {formatMoney(tour.commission_total)}
-                      </td>
-                      <td className="px-4 py-3 text-sm text-[#6b5840]">
-                        {formatMoney(tour.commission_ctv)}
-                      </td>
-                      <td className="px-4 py-3 text-sm text-[#6b5840]">
-                        {formatMoney(tour.commission_mvip)}
-                      </td>
-                      <td className="px-4 py-3 text-sm text-[#6b5840]">{tour.status || '-'}</td>
+            <td className="px-3 py-3 align-top text-sm leading-6 text-[#6b5840]">
+              <div className="line-clamp-2">{tour.category || '-'}</div>
+            </td>
 
-                      <td className="px-4 py-3">
-                        <div className="flex gap-2">
-                          <button
-                            type="button"
-                            onClick={() => handleEdit(tour)}
-                            className={`rounded-xl px-4 py-2 text-sm font-bold ${
-                              active
-                                ? 'bg-[#6f4817] text-white'
-                                : 'bg-[#8b5a22] text-white'
-                            }`}
-                          >
-                            {active ? 'Đang sửa' : 'Sửa'}
-                          </button>
+            <td className="px-3 py-3 align-top text-sm font-bold text-[#6b5840]">
+              <div className="whitespace-nowrap">{tour.price || '-'}</div>
+            </td>
 
-                          <button
-                            type="button"
-                            onClick={() => handleDelete(tour)}
-                            className="rounded-xl border border-[#d6b88c] px-4 py-2 text-sm font-bold text-[#8b5a22]"
-                          >
-                            Xóa
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  );
-                })}
+            <td className="px-3 py-3 align-top text-sm text-[#6b5840]">
+              <div className="font-semibold">{tour.supplier_name || '-'}</div>
+              <div className="mt-1 text-xs text-[#8a745c]">
+                Tổng: {formatMoney(tour.commission_total)}
+              </div>
+              <div className="text-xs text-[#8a745c]">
+                CTV: {formatMoney(tour.commission_ctv)} / Mvip: {formatMoney(tour.commission_mvip)}
+              </div>
+            </td>
 
-                {!filteredTours.length && (
-                  <tr>
-                    <td colSpan="9" className="px-4 py-8 text-center text-[#6b5840]">
-                      Chưa có tour nào.
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
+            <td className="px-3 py-3 align-top text-sm text-[#6b5840]">
+              <span
+                className={`inline-flex rounded-full px-3 py-1 text-xs font-bold ${
+                  tour.status === 'active'
+                    ? 'bg-[#edf7ed] text-[#2f7a36]'
+                    : 'bg-[#f5f1ea] text-[#8a745c]'
+                }`}
+              >
+                {tour.status || '-'}
+              </span>
+            </td>
+
+            <td className="px-3 py-3 align-top">
+              <div className="flex justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleEdit(tour)}
+                  className={`rounded-xl px-4 py-2 text-sm font-bold ${
+                    active ? 'bg-[#6f4817] text-white' : 'bg-[#8b5a22] text-white'
+}`}
+                >
+                  {active ? 'Đang sửa' : 'Sửa'}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleDelete(tour)}
+                  className="rounded-xl border border-[#d6b88c] px-4 py-2 text-sm font-bold text-[#8b5a22]"
+                >
+                  Xóa
+                </button>
+              </div>
+            </td>
+          </tr>
+        );
+      })}
+
+      {!filteredTours.length && (
+        <tr>
+          <td colSpan="6" className="px-4 py-8 text-center text-[#6b5840]">
+            Chưa có tour nào.
+          </td>
+        </tr>
+      )}
+    </tbody>
+  </table>
+</div>
         )}
       </div>
     </div>
