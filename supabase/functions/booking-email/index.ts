@@ -102,7 +102,8 @@ Deno.serve(async (req) => {
     }
 
     if (!customerName || !phone) {
-      return jsonResponse({ error: "Vui lòng nhập họ tên và số điện thoại." },
+      return jsonResponse(
+        { error: "Vui lòng nhập họ tên và số điện thoại." },
         400,
       );
     }
@@ -122,7 +123,7 @@ Deno.serve(async (req) => {
       );
     }
 
-    // 2) Lấy CTV nếu có
+    // 2) Lấy thông tin CTV nếu có
     let collaboratorName: string | null = null;
 
     if (collaboratorCode) {
@@ -164,7 +165,7 @@ Deno.serve(async (req) => {
     const { data: insertedBooking, error: insertError } = await supabase
       .from("bookings")
       .insert(insertPayload)
-      .select()
+      .select("id,booking_code,tour_title,tour_slug,total_amount,customer_name,phone,email,departure_date,guest_count,note,source,collaborator_code,collaborator_name,commission_amount")
       .single();
 
     if (insertError || !insertedBooking) {
@@ -176,9 +177,11 @@ Deno.serve(async (req) => {
     }
 
     const bookingCode = insertedBooking.booking_code || insertedBooking.id;
-    const displayAmount = formatAmountDisplay(insertedBooking.total_amount || tourRow.price);
+    const displayAmount = formatAmountDisplay(
+      insertedBooking.total_amount || tourRow.price,
+    );
 
-    // 4) Gửi mail
+    // 4) Tạo nội dung mail
     const collaboratorInfoHtml = collaboratorCode
       ? `
         <hr style="border:none;border-top:1px solid #e5e7eb;margin:24px 0;" />
@@ -188,7 +191,8 @@ Deno.serve(async (req) => {
         <p><strong>Hoa hồng CTV:</strong> ${Number(insertedBooking.commission_amount || 0).toLocaleString("vi-VN")}đ</p>
       `
       : `
-        <hr style="border:none;border-top:1px solid #e5e7eb;margin:24px 0;" /><p><strong>Nguồn booking:</strong> website</p>
+        <hr style="border:none;border-top:1px solid #e5e7eb;margin:24px 0;" />
+        <p><strong>Nguồn booking:</strong> website</p>
       `;
 
     const html = `
@@ -207,12 +211,13 @@ Deno.serve(async (req) => {
         <p><strong>Email:</strong> ${escapeHtml(insertedBooking.email || "")}</p>
         <p><strong>Ngày khởi hành:</strong> ${escapeHtml(insertedBooking.departure_date || "")}</p>
         <p><strong>Số lượng khách:</strong> ${escapeHtml(insertedBooking.guest_count || "")}</p>
-        <p><strong>Nội dung tư vấn:</strong> ${escapeHtml(insertedBooking.note || "")}</p>
+        <p><strong>Nội dung tư vấn:</strong> ${escapeHtml(note || "")}</p>
 
         ${collaboratorInfoHtml}
       </div>
     `;
 
+    // 5) Gửi mail
     const { error: sendMailError } = await resend.emails.send({
       from: bookingFromEmail,
       to: [bookingReceiverEmail],
@@ -233,6 +238,10 @@ Deno.serve(async (req) => {
       booking: {
         id: insertedBooking.id,
         booking_code: bookingCode,
+        source: insertedBooking.source,
+        collaborator_code: insertedBooking.collaborator_code,
+        collaborator_name: insertedBooking.collaborator_name,
+        commission_amount: insertedBooking.commission_amount,
       },
     });
   } catch (err) {
