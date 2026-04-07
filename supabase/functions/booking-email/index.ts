@@ -118,7 +118,7 @@ Deno.serve(async (req) => {
     const html = `
       <div style="font-family:Arial,sans-serif;line-height:1.7;color:#2d2d2d">
         <h2 style="margin-bottom:16px">Có khách mới đặt tour</h2>
-        <p><strong>Mã booking:</strong> ${escapeHtml(bookingRow.id)}</p>
+        <p><strong>Mã booking:</strong> ${booking.booking_code || booking.id}</p>
         <p><strong>Tour:</strong> ${escapeHtml(tourTitle)}</p>
         <p><strong>Slug tour:</strong> ${escapeHtml(tourSlug || "--")}</p>
         <p><strong>Giá tour:</strong> ${escapeHtml(totalAmount || "Liên hệ")}</p>
