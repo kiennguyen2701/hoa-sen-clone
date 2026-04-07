@@ -77,39 +77,37 @@ export default function SiteHeader() {
           </button>
         </div>
 
-        <div className="hidden lg:grid lg:grid-cols-[minmax(300px,380px)_1fr_180px] lg:items-center lg:gap-6 lg:py-4">
-          <Link to="/" className="flex min-w-0 items-center gap-3">
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 border-[#caa56b] text-[#8b5a22] font-extrabold">
-              VIP
-            </div>
+        <div className="hidden lg:grid lg:grid-cols-[360px_1fr_170px] lg:items-center lg:gap-6 lg:py-4">
+  <Link to="/" className="flex items-center gap-3">
+    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full border-2 border-[#caa56b] text-[#8b5a22] font-extrabold">
+      VIP
+    </div>
 
-            <div className="min-w-0">
-              <div className="truncate text-[17px] xl:text-[20px] font-black uppercase tracking-[0.01em] text-[#5c3d18]">
-                CÔNG TY CỔ PHẦN DU LỊCH MVIP
-              </div>
-            </div>
-          </Link>
+    <div className="text-[16px] xl:text-[18px] font-black uppercase whitespace-nowrap text-[#5c3d18]">
+      CÔNG TY CỔ PHẦN DU LỊCH MVIP
+    </div>
+  </Link>
 
-          <nav className="flex min-w-0 items-center justify-center gap-4 xl:gap-6 overflow-x-auto">
-            {navItems.map((item) => (
-              <NavItem key={item.to} to={item.to}>
-                {item.label}
-              </NavItem>
-            ))}
-          </nav>
+  <nav className="flex items-center justify-center gap-5 xl:gap-6 whitespace-nowrap">
+    {navItems.map((item) => (
+      <NavItem key={item.to} to={item.to}>
+        {item.label}
+      </NavItem>
+    ))}
+  </nav>
 
-          <div className="min-w-[180px] text-right">
-            <div className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#9b6a27]">
-              Hotline tư vấn
-            </div>
-            <a
-              href="tel:0965692959"
-              className="mt-1 block whitespace-nowrap text-[18px] xl:text-[20px] font-black leading-none text-[#6f4817]"
-            >
-              0965 692 959
-            </a>
-          </div>
-        </div>
+  <div className="text-right">
+    <div className="text-[11px] font-bold uppercase tracking-[0.16em] text-[#9b6a27]">
+      Hotline tư vấn
+    </div>
+    <a
+      href="tel:0965692959"
+      className="block whitespace-nowrap text-[18px] font-black text-[#6f4817]"
+    >
+      0965 692 959
+    </a>
+  </div>
+</div>
 
         {mobileOpen && (
           <div className="border-t border-[#eadfce] pb-4 pt-3 lg:hidden">
