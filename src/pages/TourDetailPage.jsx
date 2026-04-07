@@ -554,7 +554,7 @@ export default function TourDetailPage() {
           <div className="hidden xl:block">
             <div id="booking-form" className="sticky top-6 rounded-[28px] border border-[#eadfce] bg-white p-6 shadow-sm">
               <div className="text-xs font-bold uppercase tracking-[0.12em] text-[#9b6a27]">
-                Giá chỉ từ:
+                GIÁ CHỈ TỪ
               </div>
               <div className="mt-2 text-4xl font-black text-[#714b1f]">
                 {tour.price || 'Liên hệ'}
