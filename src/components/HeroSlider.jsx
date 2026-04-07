@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useHeroSliderSettings } from '../hooks/useSiteSettings';
 
 export default function HeroSlider({ mobile = false }) {
@@ -9,6 +9,9 @@ export default function HeroSlider({ mobile = false }) {
   const [keyword, setKeyword] = useState('');
   const [month, setMonth] = useState('');
   const [tourType, setTourType] = useState('');
+
+  const touchStartX = useRef(0);
+  const touchEndX = useRef(0);
 
   useEffect(() => {
     if (!slides.length) return;
@@ -29,13 +32,13 @@ export default function HeroSlider({ mobile = false }) {
   const activeSlide = useMemo(() => slides[current], [current, slides]);
 
   function prevSlide(e) {
-    e.stopPropagation();
+    if (e) e.stopPropagation();
     if (!slides.length) return;
     setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
   }
 
   function nextSlide(e) {
-    e.stopPropagation();
+    if (e) e.stopPropagation();
     if (!slides.length) return;
     setCurrent((prev) => (prev + 1) % slides.length);
   }
@@ -43,6 +46,23 @@ export default function HeroSlider({ mobile = false }) {
   function handleSlideClick() {
     const targetLink = activeSlide?.buttonLink || activeSlide?.link || '/du-lich-quoc-te';
     window.location.href = targetLink;
+  }
+
+  function handleTouchStart(e) {
+    touchStartX.current = e.changedTouches[0].clientX;
+  }
+
+  function handleTouchEnd(e) {
+    touchEndX.current = e.changedTouches[0].clientX;
+    const deltaX = touchStartX.current - touchEndX.current;
+
+    if (Math.abs(deltaX) < 50) return;
+
+    if (deltaX > 0) {
+      nextSlide();
+    } else {
+      prevSlide();
+    }
   }
 
   function handleSearch(e) {
@@ -72,6 +92,8 @@ export default function HeroSlider({ mobile = false }) {
           <div
             className={`relative cursor-pointer ${mobile ? 'h-[240px]' : 'h-[380px] md:h-[500px]'}`}
             onClick={handleSlideClick}
+            onTouchStart={handleTouchStart}
+            onTouchEnd={handleTouchEnd}
           >
             <img
               src={activeSlide.image}
@@ -101,27 +123,23 @@ export default function HeroSlider({ mobile = false }) {
               </div>
             </div>
 
-            <button
-              onClick={prevSlide}
-              className={
-                mobile
-                  ? 'absolute left-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-lg font-bold text-[#744815] shadow transition hover:bg-white'
-                  : 'absolute left-4 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-xl font-bold text-[#744815] shadow transition hover:bg-white'
-              }
-            >
-              ‹
-            </button>
+            {!mobile && (
+              <>
+                <button
+                  onClick={prevSlide}
+                  className="absolute left-4 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-xl font-bold text-[#744815] shadow transition hover:bg-white"
+                >
+                  ‹
+                </button>
 
-            <button
-              onClick={nextSlide}
-              className={
-                mobile
-                  ? 'absolute right-3 top-1/2 flex h-9 w-9 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-lg font-bold text-[#744815] shadow transition hover:bg-white'
-                  : 'absolute right-4 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-xl font-bold text-[#744815] shadow transition hover:bg-white'
-              }
-            >
-              ›
-            </button>
+                <button
+                  onClick={nextSlide}
+                  className="absolute right-4 top-1/2 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white/85 text-xl font-bold text-[#744815] shadow transition hover:bg-white"
+                >
+                  ›
+                </button>
+              </>
+            )}
 
             <div
               className={
