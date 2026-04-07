@@ -112,6 +112,42 @@ function DepartureInfoCard({ label, values }) {
     </div>
   );
 }
+function InlineInfoRow({ label, value }) {
+  return (
+    <div className="rounded-2xl border border-[#eadfce] bg-white px-5 py-4 shadow-sm">
+      <div className="grid gap-3 md:grid-cols-[180px_1fr] md:items-start">
+        <div className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#a26d1a]">
+          {label}
+        </div>
+        <div className="text-[15px] font-semibold leading-7 text-[#6a4721]">
+          {value}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function InlineDepartureRow({ label, values }) {
+  const safeValues = Array.isArray(values) ? values.filter(Boolean) : [];
+
+  return (
+    <div className="rounded-2xl border border-[#eadfce] bg-white px-5 py-4 shadow-sm">
+      <div className="grid gap-3 md:grid-cols-[180px_1fr] md:items-start">
+        <div className="text-[11px] font-bold uppercase tracking-[0.14em] text-[#a26d1a]">
+          {label}
+        </div>
+
+        <div className="grid grid-cols-2 gap-x-6 gap-y-2 text-[15px] font-semibold leading-7 text-[#6a4721] sm:grid-cols-3 lg:grid-cols-4">
+          {safeValues.length > 0 ? (
+            safeValues.map((item, index) => <div key={index}>{item}</div>)
+          ) : (
+            <div>Liên hệ</div>
+          )}
+        </div>
+      </div>
+    </div>
+  );
+}
 
 function TabButton({ label, value, activeTab, onClick }) {
   const isActive = activeTab === value;
@@ -393,26 +429,17 @@ export default function TourDetailPage() {
               )}
             </section>
 
-            {/* FIX: 4 ô theo hàng ngang trên mobile */}
-            <section className="grid grid-cols-1 gap-3 lg:grid-cols-12">
-  <div className="lg:col-span-2">
-    <InfoCard label="Thời lượng" value={tour.duration || 'Liên hệ'} />
-  </div>
+            <section className="space-y-3">
+  <InlineInfoRow label="Thời lượng" value={tour.duration || 'Liên hệ'} />
 
-  <div className="lg:col-span-6">
-    <DepartureInfoCard
-      label="Khởi hành"
-      values={departureOptions.length ? departureOptions : [tour.departure || 'Liên hệ']}
-    />
-  </div>
+  <InlineDepartureRow
+    label="Khởi hành"
+    values={departureOptions.length ? departureOptions : [tour.departure || 'Liên hệ']}
+  />
 
-  <div className="lg:col-span-2">
-    <InfoCard label="Phương tiện" value={tour.transport || 'Liên hệ'} />
-  </div>
+  <InlineInfoRow label="Phương tiện" value={tour.transport || 'Liên hệ'} />
 
-  <div className="lg:col-span-2">
-    <InfoCard label="Tiêu chuẩn" value={tour.hotel || 'Liên hệ'} />
-  </div>
+  <InlineInfoRow label="Tiêu chuẩn" value={tour.hotel || 'Liên hệ'} />
 </section>
 
             {/* FIX: chỉ còn 1 block giá trên mobile, không trùng */}
