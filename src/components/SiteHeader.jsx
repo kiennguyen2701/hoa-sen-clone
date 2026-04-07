@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, NavLink } from 'react-router-dom';
 
 const navItems = [
-  { label: 'Trang chủ', to: '/' },
+  
   { label: 'Giới thiệu', to: '/gioi-thieu' },
   { label: 'Du lịch quốc tế', to: '/du-lich-quoc-te' },
   { label: 'Du lịch trong nước', to: '/du-lich-noi-dia' },
