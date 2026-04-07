@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { listTours, getTourBySlug } from '../lib/toursApi';
+import { getTourBySlug } from '../lib/toursApi';
 import { supabase } from '../lib/supabase';
 import { getSavedCollaboratorCode } from '../lib/referral';
 
@@ -182,7 +182,7 @@ export default function TourDetailPage() {
   const [activeTab, setActiveTab] = useState('tong-quan');
   const [mainMedia, setMainMedia] = useState(null);
   const [tour, setTour] = useState(null);
-  const [relatedTours, setRelatedTours] = useState([]);
+
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const [referralCode] = useState(getSavedCollaboratorCode());
@@ -205,8 +205,7 @@ export default function TourDetailPage() {
         const current = await getTourBySlug(slug);
         setTour(current);
 
-        const all = await listTours();
-        setRelatedTours(all.filter((item) => item.slug !== current.slug).slice(0, 3));
+        
       } catch (error) {
         console.error('Load tour detail failed:', error);
         setTour(null);
@@ -549,24 +548,7 @@ export default function TourDetailPage() {
               </div>
             </SectionCard>
 
-            <SectionCard title="Tour liên quan">
-              <div className="grid gap-4 md:grid-cols-3">
-                {relatedTours.map((item) => (
-                  <Link
-                    key={item.slug}
-                    to={`/tour/${item.slug}`}
-                    className="rounded-2xl border border-[#eadfce] bg-[#fcfaf5] p-4 transition hover:-translate-y-1 hover:shadow-sm"
-                  >
-                    <div className="text-xs font-bold uppercase tracking-[0.12em] text-[#a26d1a]">
-                      {item.category}
-                    </div>
-                    <div className="mt-2 text-base font-bold leading-7 text-[#6f4817]">
-                      {item.title}
-                    </div>
-                  </Link>
-                ))}
-              </div>
-            </SectionCard>
+            
           </div>
 
           <div className="hidden xl:block">
