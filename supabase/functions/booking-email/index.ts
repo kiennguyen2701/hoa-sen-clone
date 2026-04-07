@@ -8,44 +8,68 @@ const corsHeaders = {
   "Access-Control-Allow-Methods": "POST, OPTIONS",
 };
 
-const resend = new Resend(Deno.env.get("RESEND_API_KEY"));
-
 const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
 const supabaseServiceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
+const resendApiKey = Deno.env.get("RESEND_API_KEY") ?? "";
 
-const supabaseAdmin = createClient(supabaseUrl, supabaseServiceRoleKey, {
+// Email nhận booking
+const bookingReceiverEmail =
+  Deno.env.get("BOOKING_RECEIVER_EMAIL") ||
+  Deno.env.get("TO_EMAIL") ||
+  "kiennguyen2701@gmail.com";
+
+// Email gửi đi
+const bookingFromEmail =
+  Deno.env.get("BOOKING_FROM_EMAIL") ||
+  Deno.env.get("FROM_EMAIL") ||
+  "Mvip Travel <onboarding@resend.dev>";
+
+const supabase = createClient(supabaseUrl, supabaseServiceRoleKey, {
   auth: {
     persistSession: false,
     autoRefreshToken: false,
   },
 });
 
-function normalizeCollaboratorCode(value) {
-  return String(value || "").trim().toUpperCase();
+const resend = new Resend(resendApiKey);
+
+function jsonResponse(data: unknown, status = 200) {
+  return new Response(JSON.stringify(data), {
+    status,
+    headers: {
+      ...corsHeaders,
+      "Content-Type": "application/json",
+    },
+  });
 }
 
-function escapeHtml(value) {
-  return String(value || "")
+function normalizeText(value: unknown) {
+  return String(value ?? "").trim();
+}
+
+function normalizeAmountText(value: unknown) {
+  return String(value ?? "")
+    .replace(/[^\d]/g, "")
+    .trim();
+}
+
+function formatAmountDisplay(value: unknown) {
+  const raw = normalizeAmountText(value);
+  if (!raw) return "Liên hệ";
+  return Number(raw).toLocaleString("vi-VN");
+}
+
+function inferSource(collaboratorCode: string) {
+  return collaboratorCode ? "collaborator" : "website";
+}
+
+function escapeHtml(value: unknown) {
+  return String(value ?? "")
     .replaceAll("&", "&amp;")
     .replaceAll("<", "&lt;")
     .replaceAll(">", "&gt;")
     .replaceAll('"', "&quot;")
     .replaceAll("'", "&#039;");
-}
-
-async function validateCollaboratorCode(code) {
-  if (!code) return "";
-
-  const { data, error } = await supabaseAdmin
-    .from("collaborators")
-    .select("code, is_active")
-    .eq("code", code)
-    .maybeSingle();
-
-  if (error) throw error;
-  if (!data || !data.is_active) return "";
-
-  return data.code;
 }
 
 Deno.serve(async (req) => {
@@ -55,119 +79,231 @@ Deno.serve(async (req) => {
 
   try {
     if (req.method !== "POST") {
-      return new Response(JSON.stringify({ error: "Method Not Allowed" }), {
-        status: 405,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+      return jsonResponse({ error: "Method Not Allowed" }, 405);
+    }
+
+    if (!supabaseUrl || !supabaseServiceRoleKey) {
+      return jsonResponse(
+        { error: "Thiếu SUPABASE_URL hoặc SUPABASE_SERVICE_ROLE_KEY." },
+        500,
+      );
+    }
+
+    if (!resendApiKey) {
+      return jsonResponse({ error: "Thiếu RESEND_API_KEY." }, 500);
     }
 
     const body = await req.json();
 
-    const tourId = String(body?.tourId || "").trim();
-    const tourTitle = String(body?.tourTitle || "").trim();
-    const tourSlug = String(body?.tourSlug || "").trim();
-    const totalAmount = String(body?.totalAmount || "").trim();
-    const customerName = String(body?.customerName || "").trim();
-    const phone = String(body?.phone || "").trim();
-    const email = String(body?.email || "").trim();
-    const departureDate = String(body?.departureDate || "").trim();
-    const guestCount = String(body?.guestCount || "").trim();
-    const guestCountNumber = Number(body?.guestCountNumber || 0);
-    const note = String(body?.note || "").trim();
-    const collaboratorCodeRaw = normalizeCollaboratorCode(body?.collaboratorCode);
+    const tourId = normalizeText(body?.tourId);
+    const tourTitleFromBody = normalizeText(body?.tourTitle);
+    const tourSlugFromBody = normalizeText(body?.tourSlug);
+    const totalAmountFromBody = normalizeText(body?.totalAmount);
 
-    if (!tourId || !tourTitle || !customerName || !phone) {
-      return new Response(JSON.stringify({ error: "Thiếu thông tin bắt buộc" }), {
-        status: 400,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+    const customerName = normalizeText(body?.customerName);
+    const phone = normalizeText(body?.phone);
+    const email = normalizeText(body?.email);
+    const departureDate = normalizeText(body?.departureDate);
+    const guestCount = normalizeText(body?.guestCount);
+    const guestCountNumber = Number(body?.guestCountNumber || 0);
+    const note = normalizeText(body?.note);
+    const collaboratorCode = normalizeText(body?.collaboratorCode).toUpperCase();
+
+    if (!tourId) {
+      return jsonResponse({ error: "Thiếu tourId." }, 400);
     }
 
-    const collaboratorCode = await validateCollaboratorCode(collaboratorCodeRaw);
-    const referralSource = collaboratorCode ? "collaborator" : "direct";
+    if (!customerName || !phone) {
+      return jsonResponse(
+        { error: "Vui lòng nhập họ tên và số điện thoại." },
+        400,
+      );
+    }
 
-    const { data: bookingRow, error: bookingError } = await supabaseAdmin
-      .from("bookings")
-      .insert({
-        tour_id: tourId,
-        tour_title: tourTitle,
-        tour_slug: tourSlug || null,
-        customer_name: customerName,
-        phone,
-        email: email || null,
-        departure_date: departureDate || null,
-        guest_count: guestCount || null,
-        guest_count_number: Number.isFinite(guestCountNumber) ? guestCountNumber : 0,
-        note: note || null,
-        total_amount: totalAmount || null,
-        collaborator_code: collaboratorCode || null,
-        referral_source: referralSource,
-        status: "new",
-        payment_status: "pending",
-      })
-      .select()
+    // Lấy thông tin tour thật từ DB để đảm bảo đúng
+    const { data: tourRow, error: tourError } = await supabase
+      .from("tours")
+      .select(`
+        id,
+        title,
+        slug,
+        price,
+        commission_total,
+        commission_ctv,
+        commission_mvip
+      `)
+      .eq("id", tourId)
       .single();
 
-    if (bookingError) {
-      return new Response(JSON.stringify({ error: bookingError.message }), {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+    if (tourError || !tourRow) {
+      console.error("tourError:", tourError);
+      return jsonResponse({ error: "Không tìm thấy tour." }, 400);
     }
 
+    let collaboratorName: string | null = null;
+
+    if (collaboratorCode) {
+      const { data: collaboratorRow, error: collaboratorError } = await supabase
+        .from("collaborators")
+        .select("code, name")
+        .eq("code", collaboratorCode)
+        .maybeSingle();
+
+      if (collaboratorError) {
+        console.error("collaboratorError:", collaboratorError);
+      }
+
+      collaboratorName = collaboratorRow?.name || null;
+    }
+
+    const source = inferSource(collaboratorCode);
+
+    const insertPayload = {
+      tour_id: tourRow.id,
+      tour_title: tourRow.title || tourTitleFromBody || "",
+      tour_slug: tourRow.slug || tourSlugFromBody || "",
+      total_amount: normalizeAmountText(tourRow.price || totalAmountFromBody || "0"),
+      customer_name: customerName,
+      phone,
+      email: email || null,
+      departure_date: departureDate || null,
+      guest_count: guestCount || null,
+      guest_count_number: guestCountNumber || 0,
+      note: note || null,
+      notes: note || null,
+      source,
+      collaborator_code: collaboratorCode || null,
+      collaborator_name: collaboratorName,
+      payment_status: "pending",
+      status: "new",
+      commission_status: "unpaid",
+      commission_amount: Number(tourRow.commission_ctv || 0),
+    };
+
+    const { data: insertedBooking, error: insertError } = await supabase
+      .from("bookings")
+      .insert(insertPayload)
+      .select("id")
+      .single();
+
+    if (insertError || !insertedBooking) {
+      console.error("insertError:", insertError);
+      return jsonResponse(
+        { error: insertError?.message || "Không tạo được booking." },
+        500,
+      );
+    }
+
+    const { data: booking, error: bookingError } = await supabase
+      .from("bookings")
+      .select(`
+        id,
+        booking_code,
+        tour_id,
+        tour_title,
+        tour_slug,
+        total_amount,
+        customer_name,
+        phone,
+        email,
+        departure_date,
+        guest_count,
+        guest_count_number,
+        note,
+        notes,
+        source,
+        collaborator_code,
+        collaborator_name,
+        payment_status,
+        status,
+        commission_status,
+        commission_amount,
+        created_at
+      `)
+      .eq("id", insertedBooking.id)
+      .single();
+
+    if (bookingError || !booking) {
+      console.error("bookingError:", bookingError);
+      return jsonResponse(
+        { error: bookingError?.message || "Không đọc được booking vừa tạo." },
+        500,
+      );
+    }
+
+    const bookingCode = booking.booking_code || booking.id;
+    const tourTitle = booking.tour_title || tourTitleFromBody || "N/A";
+    const tourSlug = booking.tour_slug || tourSlugFromBody || "N/A";
+    const displayAmount = formatAmountDisplay(booking.total_amount);
+
+    const collaboratorInfoHtml = collaboratorCode
+      ? `
+        <hr style="border:none;border-top:1px solid #e5e7eb;margin:24px 0;" />
+        <p><strong>Nguồn booking:</strong> collaborator</p>
+        <p><strong>Mã CTV:</strong> ${escapeHtml(collaboratorCode)}</p>
+        <p><strong>Tên CTV:</strong> ${escapeHtml(collaboratorName || "Chưa xác định")}</p>
+        <p><strong>Hoa hồng CTV:</strong> ${Number(booking.commission_amount || 0).toLocaleString("vi-VN")}đ</p>
+      `
+      : `
+        <hr style="border:none;border-top:1px solid #e5e7eb;margin:24px 0;" />
+        <p><strong>Nguồn booking:</strong> website</p>
+      `;
+
     const html = `
-      <div style="font-family:Arial,sans-serif;line-height:1.7;color:#2d2d2d">
-        <h2 style="margin-bottom:16px">Có khách mới đặt tour</h2>
-        <p><strong>Mã booking:</strong> ${booking.booking_code || booking.id}</p>
+      <div style="font-family:Arial,Helvetica,sans-serif;line-height:1.7;color:#1f2937;">
+        <h1 style="font-size:28px;margin:0 0 20px;">Có khách mới đặt tour</h1>
+
+        <p><strong>Mã booking:</strong> ${escapeHtml(bookingCode)}</p>
         <p><strong>Tour:</strong> ${escapeHtml(tourTitle)}</p>
-        <p><strong>Slug tour:</strong> ${escapeHtml(tourSlug || "--")}</p>
-        <p><strong>Giá tour:</strong> ${escapeHtml(totalAmount || "Liên hệ")}</p>
-        <p><strong>Họ tên:</strong> ${escapeHtml(customerName)}</p>
-        <p><strong>Số điện thoại:</strong> ${escapeHtml(phone)}</p>
-        <p><strong>Email:</strong> ${escapeHtml(email || "Chưa có")}</p>
-        <p><strong>Ngày khởi hành:</strong> ${escapeHtml(departureDate || "Chưa chọn")}</p>
-        <p><strong>Số lượng khách:</strong> ${escapeHtml(guestCount || "Chưa chọn")}</p>
-        <p><strong>Nội dung tư vấn:</strong> ${escapeHtml(note || "Không có")}</p>
-        <hr style="margin:20px 0;border:none;border-top:1px solid #ddd" />
-        <p><strong>Nguồn booking:</strong> ${escapeHtml(referralSource)}</p>
-        <p><strong>Mã cộng tác viên:</strong> ${escapeHtml(collaboratorCode || "Không có")}</p>
+        <p><strong>Slug tour:</strong> ${escapeHtml(tourSlug)}</p>
+        <p><strong>Giá tour:</strong> ${escapeHtml(displayAmount)}</p>
+
+        <br />
+
+        <p><strong>Họ tên:</strong> ${escapeHtml(booking.customer_name)}</p>
+        <p><strong>Số điện thoại:</strong> ${escapeHtml(booking.phone)}</p>
+        <p><strong>Email:</strong> ${escapeHtml(booking.email || "")}</p>
+        <p><strong>Ngày khởi hành:</strong> ${escapeHtml(booking.departure_date || "")}</p>
+        <p><strong>Số lượng khách:</strong> ${escapeHtml(booking.guest_count || "")}</p>
+        <p><strong>Nội dung tư vấn:</strong> ${escapeHtml(booking.note || booking.notes || "")}</p>
+
+        ${collaboratorInfoHtml}
       </div>
     `;
 
-    const { data: emailData, error: emailError } = await resend.emails.send({
-      from: "MVip Travel <onboarding@resend.dev>",
-      to: ["kiennguyen2701@gmail.com"],
+    const { error: sendMailError } = await resend.emails.send({
+      from: bookingFromEmail,
+      to: [bookingReceiverEmail],
       subject: `Khách mới đặt tour: ${tourTitle}`,
       html,
     });
 
-    if (emailError) {
-      return new Response(JSON.stringify({ error: emailError.message }), {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      });
+    if (sendMailError) {
+      console.error("sendMailError:", sendMailError);
+      return jsonResponse(
+        { error: sendMailError.message || "Gửi email thất bại." },
+        500,
+      );
     }
 
-    return new Response(
-      JSON.stringify({
-        success: true,
-        booking: bookingRow,
-        email: emailData,
-      }),
-      {
-        status: 200,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      }
-    );
+    return jsonResponse({
+      success: true,
+      booking: {
+        id: booking.id,
+        booking_code: bookingCode,
+        source: booking.source,
+        collaborator_code: booking.collaborator_code,
+        collaborator_name: booking.collaborator_name,
+        commission_amount: booking.commission_amount,
+      },
+    });
   } catch (err) {
-    return new Response(
-      JSON.stringify({
-        error: err instanceof Error ? err.message : "Unknown error",
-      }),
+    console.error("booking-email fatal error:", err);
+    return jsonResponse(
       {
-        status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
-      }
+        error: err instanceof Error ? err.message : "Unknown error",
+      },
+      500,
     );
   }
 });
