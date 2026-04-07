@@ -1,5 +1,4 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link } from 'react-router-dom';
 import { useHeroSliderSettings } from '../hooks/useSiteSettings';
 
 export default function HeroSlider({ mobile = false }) {
@@ -29,14 +28,21 @@ export default function HeroSlider({ mobile = false }) {
 
   const activeSlide = useMemo(() => slides[current], [current, slides]);
 
-  function prevSlide() {
+  function prevSlide(e) {
+    e.stopPropagation();
     if (!slides.length) return;
     setCurrent((prev) => (prev - 1 + slides.length) % slides.length);
   }
 
-  function nextSlide() {
+  function nextSlide(e) {
+    e.stopPropagation();
     if (!slides.length) return;
     setCurrent((prev) => (prev + 1) % slides.length);
+  }
+
+  function handleSlideClick() {
+    const targetLink = activeSlide?.buttonLink || activeSlide?.link || '/du-lich-quoc-te';
+    window.location.href = targetLink;
   }
 
   function handleSearch(e) {
@@ -63,51 +69,35 @@ export default function HeroSlider({ mobile = false }) {
         }
       >
         <div className="relative overflow-hidden rounded-[28px] border border-[#eadfce] bg-white shadow-sm md:rounded-[32px]">
-          <div className={`relative ${mobile ? 'h-[240px]' : 'h-[380px] md:h-[500px]'}`}>
+          <div
+            className={`relative cursor-pointer ${mobile ? 'h-[240px]' : 'h-[380px] md:h-[500px]'}`}
+            onClick={handleSlideClick}
+          >
             <img
               src={activeSlide.image}
               alt={activeSlide.title}
               className="h-full w-full object-cover"
             />
 
-            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(25,16,8,0.20)_0%,rgba(25,16,8,0.12)_35%,rgba(25,16,8,0.38)_100%)]" />
+            <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(25,16,8,0.18)_0%,rgba(25,16,8,0.08)_35%,rgba(25,16,8,0.34)_100%)]" />
 
             <div className="absolute inset-0">
               <div
                 className={
                   mobile
                     ? 'absolute left-1/2 top-4 -translate-x-1/2'
-                    : 'absolute left-1/2 top-7 -translate-x-1/2'
+                    : 'absolute left-1/2 top-8 -translate-x-1/2'
                 }
               >
                 <div
                   className={
                     mobile
-                      ? 'inline-flex whitespace-nowrap rounded-full border border-white/20 bg-black/20 px-3 py-1.5 text-[10px] font-bold uppercase tracking-[0.16em] text-white/95 backdrop-blur-sm'
-                      : 'inline-flex whitespace-nowrap rounded-full border border-white/20 bg-black/20 px-5 py-2 text-xs font-bold uppercase tracking-[0.2em] text-white/95 backdrop-blur-sm'
+                      ? 'inline-flex whitespace-nowrap rounded-full border border-white/25 bg-black/20 px-4 py-2 text-[11px] font-extrabold uppercase tracking-[0.18em] text-white/95 backdrop-blur-sm'
+                      : 'inline-flex whitespace-nowrap rounded-full border border-white/25 bg-black/20 px-6 py-2.5 text-sm font-extrabold uppercase tracking-[0.22em] text-white/95 backdrop-blur-sm'
                   }
                 >
                   {activeSlide.badge}
                 </div>
-              </div>
-
-              <div
-                className={
-                  mobile
-                    ? 'absolute bottom-14 right-4'
-                    : 'absolute bottom-10 right-10'
-                }
-              >
-                <Link
-                  to={activeSlide.buttonLink || '/du-lich-quoc-te'}
-                  className={
-                    mobile
-                      ? 'inline-flex items-center rounded-2xl bg-[#8b5a22] px-4 py-2.5 text-[11px] font-bold uppercase tracking-[0.06em] text-white transition hover:bg-[#744815]'
-                      : 'inline-flex items-center rounded-2xl bg-[#8b5a22] px-7 py-3.5 text-sm font-bold uppercase tracking-[0.08em] text-white transition hover:bg-[#744815]'
-                  }
-                >
-                  {activeSlide.buttonText || 'Chi tiết'}
-                </Link>
               </div>
             </div>
 
@@ -143,7 +133,10 @@ export default function HeroSlider({ mobile = false }) {
               {slides.map((slide, index) => (
                 <button
                   key={slide.id || index}
-                  onClick={() => setCurrent(index)}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setCurrent(index);
+                  }}
                   className={`rounded-full transition-all ${
                     current === index
                       ? mobile
