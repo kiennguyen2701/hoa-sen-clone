@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { getSetting, upsertSetting } from '../../lib/settingsApi';
-import { listToursForAdmin } from '../../lib/toursApi';
+import { listTours } from '../../lib/toursApi';
 
 const emptySlide = {
   id: '',
@@ -20,7 +20,7 @@ export default function HeroSliderSettingsPanel() {
   useEffect(() => {
     async function load() {
       const sliderData = await getSetting('hero_slider');
-      const toursData = await listToursForAdmin();
+      const toursData = await listTours();
 
       setTours(toursData || []);
 
