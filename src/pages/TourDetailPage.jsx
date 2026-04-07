@@ -641,7 +641,7 @@ export default function TourDetailPage() {
         {/* Mobile booking form */}
         <div id="booking-form" className="mt-6 xl:hidden">
           <div className="rounded-[28px] border border-[#eadfce] bg-white p-5 shadow-sm sm:p-6">
-            <div className="text-xs font-bold uppercase tracking-[0.12em] text-[#9b6a27]">Đặt tour</div>
+            <div className="text-xs font-bold uppercase tracking-[0.12em] text-[#9b6a27]">GIÁ CHỈ TỪ</div>
             <div className="mt-2 text-3xl font-black text-[#714b1f]">{tour.price || 'Liên hệ'}</div>
             <div className="mt-3 text-sm leading-7 text-[#65543e]">
               Điền thông tin để bộ phận tư vấn liên hệ xác nhận nhanh nhất.
