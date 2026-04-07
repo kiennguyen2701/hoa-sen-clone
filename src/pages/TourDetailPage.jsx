@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { listTours, getTourBySlug } from '../lib/toursApi';
 import { supabase } from '../lib/supabase';
+import { getSavedCollaboratorCode, clearCollaboratorRef } from '../lib/referral';
 
 function normalizeDepartureOptions(departureText) {
   if (!departureText) return [];
@@ -67,6 +68,19 @@ function getEmbedUrl(url) {
   return url;
 }
 
+function inferGuestCountNumber(value) {
+  const text = String(value || '').trim();
+  if (!text) return 0;
+
+  if (text === '1 khách') return 1;
+  if (text === '2 khách') return 2;
+  if (text === '3-5 khách') return 5;
+  if (text === 'Đoàn riêng') return 10;
+
+  const match = text.match(/\d+/);
+  return match ? Number(match[0]) : 0;
+}
+
 export default function TourDetailPage() {
   const { slug } = useParams();
 
@@ -76,16 +90,22 @@ export default function TourDetailPage() {
   const [relatedTours, setRelatedTours] = useState([]);
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
+  const [referralCode, setReferralCode] = useState('');
 
   const [bookingForm, setBookingForm] = useState({
     customerName: '',
     phone: '',
+    email: '',
     departureDate: '',
     guestCount: '',
     note: '',
   });
 
   const departureOptions = normalizeDepartureOptions(tour?.departure);
+
+  useEffect(() => {
+    setReferralCode(getSavedCollaboratorCode());
+  }, [slug]);
 
   useEffect(() => {
     async function load() {
@@ -112,6 +132,7 @@ export default function TourDetailPage() {
     setBookingForm({
       customerName: '',
       phone: '',
+      email: '',
       departureDate: '',
       guestCount: '',
       note: '',
@@ -169,16 +190,23 @@ export default function TourDetailPage() {
 
       const { data, error } = await supabase.functions.invoke('booking-email', {
         body: {
+          tourId: tour.id,
           tourTitle: tour.title,
+          tourSlug: tour.slug,
+          totalAmount: tour.price || 'Liên hệ',
           customerName: bookingForm.customerName.trim(),
           phone: bookingForm.phone.trim(),
+          email: bookingForm.email.trim(),
           departureDate: bookingForm.departureDate || '',
           guestCount: bookingForm.guestCount || '',
+          guestCountNumber: inferGuestCountNumber(bookingForm.guestCount),
           note: bookingForm.note.trim(),
+          collaboratorCode: referralCode || '',
         },
       });
 
       if (error) throw error;
+      if (data?.error) throw new Error(data.error);
 
       alert('Đã gửi yêu cầu đặt tour thành công. Bộ phận tiếp nhận sẽ liên hệ cho quý khách trong thời gian sớm nhất.');
       console.log('booking-email response:', data);
@@ -186,6 +214,7 @@ export default function TourDetailPage() {
       setBookingForm({
         customerName: '',
         phone: '',
+        email: '',
         departureDate: '',
         guestCount: '',
         note: '',
@@ -276,8 +305,7 @@ export default function TourDetailPage() {
               {mediaItems.length > 0 && (
                 <div className="grid grid-cols-4 gap-2 p-3 sm:grid-cols-5 sm:gap-3 sm:p-4">
                   {mediaItems.map((item, index) => {
-                    const isActive =
-                      mainMedia?.type === item.type && mainMedia?.url === item.url;
+                    const isActive = mainMedia?.type === item.type && mainMedia?.url === item.url;
 
                     return (
                       <button
@@ -311,7 +339,10 @@ export default function TourDetailPage() {
 
             <div className="grid grid-cols-2 gap-3 xl:grid-cols-4">
               <InfoCard label="Thời lượng" value={tour.duration || 'Liên hệ'} />
-              <DepartureCard label="Khởi hành" values={departureOptions.length ? departureOptions : [tour.departure || 'Liên hệ']} />
+              <DepartureCard
+                label="Khởi hành"
+                values={departureOptions.length ? departureOptions : [tour.departure || 'Liên hệ']}
+              />
               <InfoCard label="Phương tiện" value={tour.transport || 'Liên hệ'} />
               <InfoCard label="Tiêu chuẩn" value={tour.hotel || 'Liên hệ'} />
             </div>
@@ -331,9 +362,7 @@ export default function TourDetailPage() {
                   <div className="space-y-6 sm:space-y-8">
                     <section>
                       <h2 className="text-2xl font-black text-[#714b1f]">Tổng quan tour</h2>
-                      <p className="mt-4 text-sm leading-7 text-[#5f4a33] sm:text-[15px] sm:leading-8">
-                        {tour.overview}
-                      </p>
+                      <p className="mt-4 text-sm leading-7 text-[#5f4a33] sm:text-[15px] sm:leading-8">{tour.overview}</p>
                     </section>
 
                     <section>
@@ -363,21 +392,13 @@ export default function TourDetailPage() {
                           <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#8b5a22] text-sm font-black text-white sm:h-12 sm:w-12">
                             {index + 1}
                           </div>
-                          {index !== (tour.itinerary || []).length - 1 && (
-                            <div className="mt-2 h-full w-[2px] bg-[#eadfce]" />
-                          )}
+                          {index !== (tour.itinerary || []).length - 1 && <div className="mt-2 h-full w-[2px] bg-[#eadfce]" />}
                         </div>
 
                         <div className="flex-1 rounded-2xl border border-[#eadfce] bg-[#fcfaf5] p-4">
-                          <div className="text-xs font-bold uppercase tracking-[0.15em] text-[#a26d1a]">
-                            {item.day}
-                          </div>
-                          <div className="mt-2 text-base font-bold text-[#6f4817] sm:text-lg">
-                            {item.title}
-                          </div>
-                          <p className="mt-2 text-sm leading-7 text-[#5f4a33] sm:text-[15px] sm:leading-8">
-                            {item.description}
-                          </p>
+                          <div className="text-xs font-bold uppercase tracking-[0.15em] text-[#a26d1a]">{item.day}</div>
+                          <div className="mt-2 text-base font-bold text-[#6f4817] sm:text-lg">{item.title}</div>
+                          <p className="mt-2 text-sm leading-7 text-[#5f4a33] sm:text-[15px] sm:leading-8">{item.description}</p>
                         </div>
                       </div>
                     ))}
@@ -419,60 +440,52 @@ export default function TourDetailPage() {
 
           <div className="space-y-6">
             <div className="lg:sticky lg:top-6">
-              <div className="rounded-3xl border border-[#eadfce] bg-white p-5 sm:p-6 shadow-sm">
-                <div className="text-xs font-bold uppercase tracking-[0.12em] text-[#9b6a27]">
-                  Giá từ
-                </div>
-                <div className="mt-2 text-3xl font-black text-[#714b1f]">
-                  {tour.price || 'Liên hệ'}
-                </div>
+              <div className="rounded-3xl border border-[#eadfce] bg-white p-5 shadow-sm sm:p-6">
+                <div className="text-xs font-bold uppercase tracking-[0.12em] text-[#9b6a27]">Giá từ</div>
+                <div className="mt-2 text-3xl font-black text-[#714b1f]">{tour.price || 'Liên hệ'}</div>
                 <div className="mt-2 text-sm leading-7 text-[#65543e]">
                   Giá có thể thay đổi theo ngày khởi hành và dịch vụ đi kèm. Liên hệ để nhận báo giá mới nhất.
                 </div>
 
+                
+
                 <form onSubmit={handleBookingSubmit} className="mt-5 grid gap-3">
                   <input
                     value={bookingForm.customerName}
-                    onChange={(e) =>
-                      setBookingForm({ ...bookingForm, customerName: e.target.value })
-                    }
+                    onChange={(e) => setBookingForm({ ...bookingForm, customerName: e.target.value })}
                     className="rounded-2xl border border-[#dcc7a6] px-4 py-2.5 text-sm outline-none"
                     placeholder="Họ và tên"
                   />
 
                   <input
                     value={bookingForm.phone}
-                    onChange={(e) =>
-                      setBookingForm({ ...bookingForm, phone: e.target.value })
-                    }
+                    onChange={(e) => setBookingForm({ ...bookingForm, phone: e.target.value })}
                     className="rounded-2xl border border-[#dcc7a6] px-4 py-2.5 text-sm outline-none"
                     placeholder="Số điện thoại"
                   />
 
+                  <input
+                    type="email"
+                    value={bookingForm.email}
+                    onChange={(e) => setBookingForm({ ...bookingForm, email: e.target.value })}
+                    className="rounded-2xl border border-[#dcc7a6] px-4 py-2.5 text-sm outline-none"
+                    placeholder="Email"
+                  />
+
                   <select
                     value={bookingForm.departureDate}
-                    onChange={(e) =>
-                      setBookingForm((prev) => ({
-                        ...prev,
-                        departureDate: e.target.value,
-                      }))
-                    }
+                    onChange={(e) => setBookingForm((prev) => ({ ...prev, departureDate: e.target.value }))}
                     className="w-full rounded-2xl border border-[#dcc7a6] px-4 py-2.5 text-sm"
                   >
                     <option value="">Chọn ngày khởi hành</option>
-
                     {departureOptions.map((date, index) => (
-                      <option key={index} value={date}>
-                        {date}
-                      </option>
+                      <option key={index} value={date}>{date}</option>
                     ))}
                   </select>
 
                   <select
                     value={bookingForm.guestCount}
-                    onChange={(e) =>
-                      setBookingForm({ ...bookingForm, guestCount: e.target.value })
-                    }
+                    onChange={(e) => setBookingForm({ ...bookingForm, guestCount: e.target.value })}
                     className="rounded-2xl border border-[#dcc7a6] px-4 py-2.5 text-sm text-[#6b5840] outline-none"
                   >
                     <option value="">Số lượng khách</option>
@@ -484,9 +497,7 @@ export default function TourDetailPage() {
 
                   <textarea
                     value={bookingForm.note}
-                    onChange={(e) =>
-                      setBookingForm({ ...bookingForm, note: e.target.value })
-                    }
+                    onChange={(e) => setBookingForm({ ...bookingForm, note: e.target.value })}
                     className="min-h-[96px] rounded-2xl border border-[#dcc7a6] px-4 py-3 text-sm outline-none"
                     placeholder="Nội dung cần tư vấn"
                   />
@@ -501,9 +512,7 @@ export default function TourDetailPage() {
                 </form>
 
                 <div className="mt-5 rounded-2xl bg-[#fcfaf5] p-4">
-                  <div className="text-xs font-bold uppercase tracking-[0.12em] text-[#9b6a27]">
-                    Hotline tư vấn
-                  </div>
+                  <div className="text-xs font-bold uppercase tracking-[0.12em] text-[#9b6a27]">Hotline tư vấn</div>
                   <div className="mt-2 text-2xl font-black text-[#744815]">0965 692 959</div>
                   <div className="mt-1 text-sm text-[#65543e]">Hỗ trợ 08:00 - 17:30 mỗi ngày</div>
                 </div>
@@ -529,12 +538,8 @@ export default function TourDetailPage() {
                     to={`/tour/${item.slug}`}
                     className="block rounded-2xl border border-[#eadfce] p-4 transition hover:bg-[#fcfaf5]"
                   >
-                    <div className="text-xs font-bold uppercase tracking-[0.12em] text-[#a26d1a]">
-                      {item.category}
-                    </div>
-                    <div className="mt-1 text-base font-bold leading-7 text-[#6f4817]">
-                      {item.title}
-                    </div>
+                    <div className="text-xs font-bold uppercase tracking-[0.12em] text-[#a26d1a]">{item.category}</div>
+                    <div className="mt-1 text-base font-bold leading-7 text-[#6f4817]">{item.title}</div>
                   </Link>
                 ))}
               </div>
@@ -549,12 +554,8 @@ export default function TourDetailPage() {
 function InfoCard({ label, value }) {
   return (
     <div className="rounded-2xl border border-[#eadfce] bg-white p-4 shadow-sm">
-      <div className="text-[9px] font-bold uppercase tracking-[0.1em] text-[#9b6a27] sm:text-[10px]">
-        {label}
-      </div>
-      <div className="mt-1.5 text-[11px] font-semibold leading-5 text-[#744815] whitespace-pre-line sm:text-xs md:text-sm">
-        {value}
-      </div>
+      <div className="text-[9px] font-bold uppercase tracking-[0.1em] text-[#9b6a27] sm:text-[10px]">{label}</div>
+      <div className="mt-1.5 whitespace-pre-line text-[11px] font-semibold leading-5 text-[#744815] sm:text-xs md:text-sm">{value}</div>
     </div>
   );
 }
@@ -564,10 +565,7 @@ function DepartureCard({ label, values }) {
 
   return (
     <div className="rounded-2xl border border-[#eadfce] bg-white p-4 shadow-sm">
-      <div className="text-[9px] font-bold uppercase tracking-[0.1em] text-[#9b6a27] sm:text-[10px]">
-        {label}
-      </div>
-
+      <div className="text-[9px] font-bold uppercase tracking-[0.1em] text-[#9b6a27] sm:text-[10px]">{label}</div>
       <div className="mt-1.5 grid grid-cols-2 gap-x-3 gap-y-1 text-[11px] font-semibold leading-5 text-[#744815] sm:text-xs md:text-sm">
         {safeValues.map((item, idx) => (
           <div key={idx}>{item}</div>
@@ -584,9 +582,7 @@ function TabButton({ label, value, activeTab, onClick }) {
     <button
       onClick={() => onClick(value)}
       className={`rounded-t-2xl px-3 py-2 text-[11px] font-bold uppercase tracking-[0.06em] sm:px-4 sm:py-3 sm:text-sm ${
-        isActive
-          ? 'bg-[#8b5a22] text-white'
-          : 'bg-[#f5ecdd] text-[#7a552f] hover:bg-[#ead9bc]'
+        isActive ? 'bg-[#8b5a22] text-white' : 'bg-[#f5ecdd] text-[#7a552f] hover:bg-[#ead9bc]'
       }`}
     >
       {label}

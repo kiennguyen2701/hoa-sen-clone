@@ -182,3 +182,78 @@
     border-right-color: var(--border);
   }
 }
+.page-container {
+  align-items: center;
+  border: 1px solid #ececec;
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.admin-list-item.active {
+  border-color: #111827;
+}
+
+.admin-list-item button:first-child {
+  flex: 1;
+  text-align: left;
+  background: transparent;
+}
+
+.admin-list-item button:last-child,
+.ref-link-box button,
+.booking-form button,
+.admin-form button {
+  background: #111827;
+  color: #fff;
+}
+
+.ref-link-box {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.qr-box {
+  display: grid;
+  gap: 12px;
+  justify-content: start;
+}
+
+.qr-box img {
+  width: 220px;
+  height: 220px;
+  object-fit: contain;
+  border: 1px solid #ececec;
+  border-radius: 12px;
+  background: #fff;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+.table-wrap table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-wrap th,
+.table-wrap td {
+  border-bottom: 1px solid #ececec;
+  padding: 12px;
+  text-align: left;
+  vertical-align: top;
+  white-space: nowrap;
+}
+
+@media (max-width: 900px) {
+  .tour-detail-page,
+  .admin-grid-2 {
+    grid-template-columns: 1fr;
+  }
+
+  .ref-link-box {
+    grid-template-columns: 1fr;
+  }
+}

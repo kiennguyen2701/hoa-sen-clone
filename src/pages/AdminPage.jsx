@@ -1,28 +1,57 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import TourAdminPanel from '../components/admin/TourAdminPanel';
 import SiteSettingsPanel from '../components/admin/SiteSettingsPanel';
 import HeroSliderSettingsPanel from '../components/admin/HeroSliderSettingsPanel';
+import CollaboratorsPanel from '../components/admin/CollaboratorsPanel';
+import { signOutUser } from '../lib/auth';
 
 const adminTabs = [
   { key: 'dashboard', label: 'Tổng quan' },
   { key: 'tours', label: 'Quản lý tour' },
   { key: 'banner', label: 'Banner trang chủ' },
   { key: 'header', label: 'Header & Footer' },
+  { key: 'collaborators', label: 'Cộng tác viên & Booking' },
 ];
 
 export default function AdminPage() {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [loggingOut, setLoggingOut] = useState(false);
+
+  async function handleLogout() {
+    try {
+      setLoggingOut(true);
+      await signOutUser();
+      navigate('/login', { replace: true });
+    } catch (error) {
+      console.error(error);
+      alert(error.message || 'Đăng xuất thất bại.');
+    } finally {
+      setLoggingOut(false);
+    }
+  }
 
   return (
     <section className="mx-auto max-w-[1280px] px-4 py-10">
-      <div className="mb-8">
-        <div className="text-xs font-bold uppercase tracking-[0.18em] text-[#a26d1a]">
-          Admin
+      <div className="mb-8 flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <div className="text-xs font-bold uppercase tracking-[0.18em] text-[#a26d1a]">
+            Admin
+          </div>
+          <h1 className="mt-2 text-4xl font-black text-[#714b1f]">Dashboard quản trị</h1>
+          <p className="mt-3 max-w-3xl text-[15px] leading-8 text-[#5f4a33]">
+            Quản lý toàn bộ nội dung website MVIP Travel theo từng module riêng biệt.
+          </p>
         </div>
-        <h1 className="mt-2 text-4xl font-black text-[#714b1f]">Dashboard quản trị</h1>
-        <p className="mt-3 max-w-3xl text-[15px] leading-8 text-[#5f4a33]">
-          Quản lý toàn bộ nội dung website MVIP Travel theo từng module riêng biệt.
-        </p>
+
+        <button
+          onClick={handleLogout}
+          disabled={loggingOut}
+          className="rounded-2xl border border-[#cfa871] bg-white px-5 py-3 text-sm font-bold uppercase tracking-[0.08em] text-[#8b5a22]"
+        >
+          {loggingOut ? 'Đang đăng xuất...' : 'Đăng xuất'}
+        </button>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
@@ -46,13 +75,12 @@ export default function AdminPage() {
               </button>
             ))}
           </div>
-        </aside>
-
-        <main className="min-w-0">
+        </aside><main className="min-w-0">
           {activeTab === 'dashboard' && <AdminDashboardHome setActiveTab={setActiveTab} />}
           {activeTab === 'tours' && <TourAdminPanel />}
           {activeTab === 'banner' && <HeroSliderSettingsPanel />}
           {activeTab === 'header' && <SiteSettingsPanel />}
+          {activeTab === 'collaborators' && <CollaboratorsPanel />}
         </main>
       </div>
     </section>
@@ -76,6 +104,11 @@ function AdminDashboardHome({ setActiveTab }) {
       title: 'Header & Footer',
       desc: 'Chỉnh sửa thương hiệu, hotline, menu và thông tin chân trang.',
     },
+    {
+      key: 'collaborators',
+      title: 'Cộng tác viên & Booking',
+      desc: 'Quản lý link ref, QR code, booking đổ về từ CTV và thống kê doanh số.',
+    },
   ];
 
   return (
@@ -87,7 +120,7 @@ function AdminDashboardHome({ setActiveTab }) {
         </p>
       </div>
 
-      <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-3">
+      <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
         {cards.map((card) => (
           <button
             key={card.key}

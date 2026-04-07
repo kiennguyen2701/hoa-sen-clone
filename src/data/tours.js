@@ -18,7 +18,7 @@ export const tours = [
   shortDescription:
     'Hành trình chiêm bái các thánh tích Phật giáo tại Ấn Độ và Nepal, kết hợp trải nghiệm tâm linh và nghỉ dưỡng chất lượng.',
   overview:
-    'Tour hành hương Ấn Độ - Nepal là hành trình nổi bật của Du Lịch Hoa Sen, đưa khách đến các thánh địa Phật giáo quan trọng như Bồ Đề Đạo Tràng, Lâm Tỳ Ni, Kushinagar, Xá Vệ Thành và nhiều điểm linh thiêng khác.',
+    'Tour hành hương Ấn Độ - Nepal là hành trình nổi bật của Mvip Travel, đưa khách đến các thánh địa Phật giáo quan trọng như Bồ Đề Đạo Tràng, Lâm Tỳ Ni, Kushinagar, Xá Vệ Thành và nhiều điểm linh thiêng khác.',
   highlights: [
     'Chiêm bái các thánh tích Phật giáo quan trọng',
     'Lịch trình tối ưu cho khách hành hương',

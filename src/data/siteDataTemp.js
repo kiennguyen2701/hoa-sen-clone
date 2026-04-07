@@ -32,7 +32,7 @@ export const guides = [
   {
     title: 'Visa Du học Ấn Độ: Điều kiện, Hồ Sơ và Chi Phí',
     excerpt:
-      'Du Lịch Hoa Sen hỗ trợ visa du học Ấn Độ cho sinh viên, quý Tăng Ni, phật tử.',
+      'Mvip Travel hỗ trợ visa du học Ấn Độ cho sinh viên, quý Tăng Ni, phật tử.',
   },
   {
     title: 'Có gì thú vị tại đất nước hạnh phúc nhất thế giới - Bhutan?',
@@ -44,7 +44,7 @@ export const guides = [
 export const reviews = [
   {
     name: 'Tổng Lãnh Sự Srilanka',
-    text: '(Phiên dịch) Công Ty Du Lịch Hoa Sen! Tôi rất biết ơn vì họ thường xuyên tổ chức các đoàn hành hương qua đất nước của tôi.',
+    text: '(Phiên dịch) Công Ty Mvip Travel! Tôi rất biết ơn vì họ thường xuyên tổ chức các đoàn hành hương qua đất nước của tôi.',
   },
   {
     name: 'Ca Sĩ Đan Trường',
