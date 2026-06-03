@@ -186,6 +186,7 @@ export default function TourDetailPage() {
   const [loading, setLoading] = useState(true);
   const [sending, setSending] = useState(false);
   const [referralCode] = useState(getSavedCollaboratorCode());
+  const [displayPrice, setDisplayPrice] = useState(null);
 
   const [bookingForm, setBookingForm] = useState({
     customerName: '',
@@ -557,7 +558,7 @@ export default function TourDetailPage() {
                 GIÁ CHỈ TỪ
               </div>
               <div className="mt-2 text-4xl font-black text-[#714b1f]">
-                {tour.price || 'Liên hệ'}
+                {displayPrice || tour.price || 'Liên hệ'}
               </div>
               <div className="mt-3 text-sm leading-7 text-[#65543e]">
                 Điền thông tin để bộ phận tư vấn liên hệ xác nhận nhanh nhất.
@@ -588,7 +589,12 @@ export default function TourDetailPage() {
 
                 <select
                   value={bookingForm.departureDate}
-                  onChange={(e) => setBookingForm((prev) => ({ ...prev, departureDate: e.target.value }))}
+                  onChange={(e) => {
+                    const date = e.target.value;
+                    setBookingForm((prev) => ({ ...prev, departureDate: date }));
+                    const priceMap = tour?.departure_prices;
+                    setDisplayPrice(priceMap && date && priceMap[date] ? priceMap[date] : null);
+                  }}
                   className="w-full rounded-2xl border border-[#dcc7a6] px-4 py-3 text-sm"
                 >
                   <option value="">Chọn ngày khởi hành</option>
@@ -642,7 +648,7 @@ export default function TourDetailPage() {
         <div id="booking-form" className="mt-6 xl:hidden">
           <div className="rounded-[28px] border border-[#eadfce] bg-white p-5 shadow-sm sm:p-6">
             <div className="text-xs font-bold uppercase tracking-[0.12em] text-[#9b6a27]">GIÁ CHỈ TỪ</div>
-            <div className="mt-2 text-3xl font-black text-[#714b1f]">{tour.price || 'Liên hệ'}</div>
+            <div className="mt-2 text-3xl font-black text-[#714b1f]">{displayPrice || tour.price || 'Liên hệ'}</div>
             <div className="mt-3 text-sm leading-7 text-[#65543e]">
               Điền thông tin để bộ phận tư vấn liên hệ xác nhận nhanh nhất.
             </div>
@@ -705,14 +711,4 @@ export default function TourDetailPage() {
               <button
                 type="submit"
                 disabled={sending}
-                className="rounded-2xl bg-[#8b5a22] px-5 py-3.5 text-sm font-bold uppercase tracking-[0.08em] text-white transition hover:opacity-95"
-              >
-                {sending ? 'Đang gửi...' : 'Đặt tour ngay'}
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
+            
